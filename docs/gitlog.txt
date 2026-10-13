@@ -6,3 +6,4 @@ b7c5b32 2026-10-12 23:30 Estructura inicial del proyecto: README, Makefile y .gi
 17f36e9 2026-10-12 23:57 Mejoras de salida, corridas de ejemplo y borrador del reporte
 3c6c471 2026-10-13 00:01 Espera simulada con ppoll() en lugar de poll()
 7718525 2026-10-13 00:03 Cascada de terminacion con PR_SET_PDEATHSIG y E6/E7 extendidos
+1f09c1b 2026-10-13 10:14 Reporte final: resultados de E1 a E6, corridas y conclusiones
