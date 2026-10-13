@@ -615,14 +615,205 @@ failed_noup:
 }
 
 /* ------------------------------------------------------------------------ */
-/*  B. Calculos (pendiente)                                                  */
+/*  B. Calculos: analizador recursivo descendente                            */
+/*                                                                           */
+/*  Gramatica (de menor a mayor precedencia):                                */
+/*    expr    := or                                                          */
+/*    or      := and   ( "||" and )*                                         */
+/*    and     := eq    ( "&&" eq )*                                          */
+/*    eq      := rel   ( ("==" | "!=") rel )*                                */
+/*    rel     := add   ( ("<" | "<=" | ">" | ">=") add )*                    */
+/*    add     := mul   ( ("+" | "-") mul )*                                  */
+/*    mul     := unary ( ("*" | "/" | "%") unary )*                          */
+/*    unary   := ("-" | "+" | "!") unary | power                             */
+/*    power   := primary ( "^" unary )?          (asociativa a la derecha)   */
+/*    primary := numero | "(" expr ")" | "true" | "false"                    */
+/*             | ("sqrt" | "abs") "(" expr ")"                               */
+/*  Los operadores logicos y relacionales devuelven 1 o 0; cualquier valor   */
+/*  distinto de 0 es verdadero. Errores: sintaxis, division o modulo entre   */
+/*  cero, raiz de negativo y resultados no finitos.                          */
 /* ------------------------------------------------------------------------ */
+typedef struct { const char *s, *start; int err; char emsg[160]; } parser_t;
+
+static double p_or(parser_t *p);
+
+static void p_fail(parser_t *p, const char *what)
+{
+    if (p->err) return;
+    p->err = 1;
+    snprintf(p->emsg, sizeof p->emsg, "%s (posicion %ld)", what, (long)(p->s - p->start) + 1);
+}
+
+static void p_ws(parser_t *p) { while (isspace((unsigned char)*p->s)) p->s++; }
+
+static int p_eat(parser_t *p, const char *tok)          /* consume tok si esta */
+{
+    p_ws(p);
+    size_t n = strlen(tok);
+    if (strncmp(p->s, tok, n) == 0) { p->s += n; return 1; }
+    return 0;
+}
+
+static double p_primary(parser_t *p)
+{
+    p_ws(p);
+    if (p->err) return 0;
+    if (p_eat(p, "(")) {
+        double v = p_or(p);
+        if (!p_eat(p, ")")) p_fail(p, "falta ')'");
+        return v;
+    }
+    if (strncasecmp(p->s, "true", 4) == 0)  { p->s += 4; return 1; }
+    if (strncasecmp(p->s, "false", 5) == 0) { p->s += 5; return 0; }
+    if (strncasecmp(p->s, "sqrt", 4) == 0 || strncasecmp(p->s, "abs", 3) == 0) {
+        int is_sqrt = (tolower((unsigned char)p->s[0]) == 's');
+        p->s += is_sqrt ? 4 : 3;
+        if (!p_eat(p, "(")) { p_fail(p, "se esperaba '(' despues de la funcion"); return 0; }
+        double v = p_or(p);
+        if (!p_eat(p, ")")) { p_fail(p, "falta ')'"); return 0; }
+        if (is_sqrt && v < 0) { p_fail(p, "raiz cuadrada de un numero negativo"); return 0; }
+        return is_sqrt ? sqrt(v) : fabs(v);
+    }
+    if (isdigit((unsigned char)*p->s) || *p->s == '.') {
+        char *end;
+        double v = strtod(p->s, &end);
+        if (end == p->s) { p_fail(p, "numero mal formado"); return 0; }
+        p->s = end;
+        return v;
+    }
+    if (*p->s == 0) p_fail(p, "expresion incompleta");
+    else {
+        char m[64];
+        snprintf(m, sizeof m, "simbolo inesperado '%c'", *p->s);
+        p_fail(p, m);
+    }
+    return 0;
+}
+
+static double p_unary(parser_t *p);
+
+static double p_power(parser_t *p)
+{
+    double b = p_primary(p);
+    if (p_eat(p, "^")) return pow(b, p_unary(p));
+    return b;
+}
+
+static double p_unary(parser_t *p)
+{
+    p_ws(p);
+    if (*p->s == '!' && p->s[1] != '=') { p->s++; return !(p_unary(p) != 0); }
+    if (*p->s == '-') { p->s++; return -p_unary(p); }
+    if (*p->s == '+') { p->s++; return  p_unary(p); }
+    return p_power(p);
+}
+
+static double p_mul(parser_t *p)
+{
+    double v = p_unary(p);
+    for (;;) {
+        if (p->err) return 0;
+        if (p_eat(p, "*")) { v *= p_unary(p); }
+        else if (p_eat(p, "/")) {
+            double r = p_unary(p);
+            if (r == 0) { p_fail(p, "division entre cero"); return 0; }
+            v /= r;
+        } else if (p_eat(p, "%")) {
+            double r = p_unary(p);
+            if (r == 0) { p_fail(p, "modulo entre cero"); return 0; }
+            v = fmod(v, r);
+        } else return v;
+    }
+}
+
+static double p_add(parser_t *p)
+{
+    double v = p_mul(p);
+    for (;;) {
+        if (p->err) return 0;
+        if (p_eat(p, "+")) v += p_mul(p);
+        else if (p_eat(p, "-")) v -= p_mul(p);
+        else return v;
+    }
+}
+
+static double p_rel(parser_t *p)
+{
+    double v = p_add(p);
+    for (;;) {
+        if (p->err) return 0;
+        if (p_eat(p, "<="))      v = v <= p_add(p);
+        else if (p_eat(p, ">=")) v = v >= p_add(p);
+        else if (p_eat(p, "<"))  v = v <  p_add(p);
+        else if (p_eat(p, ">"))  v = v >  p_add(p);
+        else return v;
+    }
+}
+
+static double p_eq(parser_t *p)
+{
+    double v = p_rel(p);
+    for (;;) {
+        if (p->err) return 0;
+        if (p_eat(p, "=="))      v = v == p_rel(p);
+        else if (p_eat(p, "!=")) v = v != p_rel(p);
+        else return v;
+    }
+}
+
+static double p_and(parser_t *p)
+{
+    double v = p_eq(p);
+    while (!p->err && p_eat(p, "&&")) { double r = p_eq(p); v = (v != 0) && (r != 0); }
+    return v;
+}
+
+static double p_or(parser_t *p)
+{
+    double v = p_and(p);
+    while (!p->err && p_eat(p, "||")) { double r = p_and(p); v = (v != 0) || (r != 0); }
+    return v;
+}
+
+/* Evalua expr; devuelve 1 y deja el valor en *out, o 0 y el error en err */
+static int evaluate(const char *expr, double *out, char *err, size_t errn)
+{
+    parser_t p = { expr, expr, 0, "" };
+    double v = p_or(&p);
+    p_ws(&p);
+    if (!p.err && *p.s) p_fail(&p, "texto sobrante al final");
+    if (!p.err && !isfinite(v)) p_fail(&p, "el resultado no es un numero finito");
+    if (p.err) { snprintf(err, errn, "%s", p.emsg); return 0; }
+    *out = v;
+    return 1;
+}
+
+static void format_number(double v, char *buf, size_t n)
+{
+    if (fabs(v) < 1e15 && v == floor(v)) snprintf(buf, n, "%.0f", v);
+    else snprintf(buf, n, "%.10g", v);
+}
+
 static void handle_calc(int out_fd, msg_t *t)
 {
     msg_t r;
     memset(&r, 0, sizeof r);
-    r.type = M_RESULT; r.kind = K_CALC; r.ok = 0;
-    snprintf(r.text, sizeof r.text, "calc aun no implementado: %s", t->text);
+    r.type = M_RESULT; r.kind = K_CALC;
+    r.solver = ME; r.solver.pid = getpid(); r.solver.ppid = getppid();
+
+    say("Recibi por mi pipe un calculo: \"%s\". Ooooh, eso es facil!", t->text);
+    double v;
+    char err[160], num[64];
+    if (evaluate(t->text, &v, err, sizeof err)) {
+        format_number(v, num, sizeof num);
+        r.ok = 1;
+        snprintf(r.text, sizeof r.text, "%.150s = %s", t->text, num);
+        say("Resultado: %s. Calculo completado! Gracias por dejarme servirle. Adios! *puff*", r.text);
+    } else {
+        r.ok = 0;
+        snprintf(r.text, sizeof r.text, "error: %.200s", err);
+        say("No pude evaluar \"%s\": %s. La existencia es dolor! *puff*", t->text, err);
+    }
     write_msg(out_fd, &r);
 }
 
