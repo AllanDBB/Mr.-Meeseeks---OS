@@ -3,3 +3,6 @@ b7c5b32 2026-10-12 23:30 Estructura inicial del proyecto: README, Makefile y .gi
 59d2a11 2026-10-12 23:38 Caso B: evaluador de expresiones aritmeticas y logicas
 46916b1 2026-10-12 23:38 Caso C: ejecucion de programas externos con fork/exec/waitpid
 8572143 2026-10-12 23:39 Script de experimentos para la seccion 0x02
+17f36e9 2026-10-12 23:57 Mejoras de salida, corridas de ejemplo y borrador del reporte
+3c6c471 2026-10-13 00:01 Espera simulada con ppoll() en lugar de poll()
+7718525 2026-10-13 00:03 Cascada de terminacion con PR_SET_PDEATHSIG y E6/E7 extendidos

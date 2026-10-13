@@ -1,0 +1,12 @@
++--------------------------------------------------------------+
+|             BOX DE MR. MEESEEKS   (IC-6600, ITCR)            |
+|  Escriba una solicitud, 'calc <expr>', 'run <comando>'       |
+|  o despidase con 'adios'.                                    |
++--------------------------------------------------------------+
+Configuracion: tiempo maximo 300 s | tope 100000 Meeseeks | 128 trabajando a la vez | ganancia 0.50
+
+Box> E7 imposible
+  Dificultad 0-100 (Enter = a la suerte del Meeseeks): 0
+  Duracion simulada en s (Enter = aleatoria 0.5-5): 
+[Box    pid 26506 | ppid 5738] Advertencia: dificultad 0 = tarea imposible. Se aplicara el plan de contingencia.
+[Box    pid 26506 | ppid 5738] Boton presionado: Mr. Meeseeks raiz (pid 26507) atendera la solicitud #1 [texto] "E7 imposible"

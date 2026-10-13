@@ -112,7 +112,7 @@ static int run_task(int kind, const char *text, double d, double dur)
     close(down[1]); close(up[0]);
 
     const char *est = R->status == 1 ? "COMPLETADA" : R->status == 2 ? "CAOS PLANETARIO" : "NO COMPLETADA";
-    say("Solicitud #%d %s. Tiempo total %.3f s | espera simulada %.3f s | tiempo real %.3f s | CPU %.3f s",
+    say("Solicitud #%d %s. Tiempo total %.4f s | espera simulada %.4f s | tiempo real %.4f s | CPU %.4f s",
         R->id, est, R->wall, R->sim, R->real, R->cpu);
     say("   Mr. Meeseeks creados: %ld | nivel maximo: %d | pico simultaneo: %ld%s",
         R->created, R->max_level, R->max_alive, R->capped ? " | se activo el tope de contingencia" : "");

@@ -37,7 +37,7 @@
   literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1
 }
 \lstdefinestyle{salida}{
-  basicstyle=\ttfamily\scriptsize, backgroundcolor=\color{fondo}, frame=single,
+  language={}, basicstyle=\ttfamily\scriptsize, backgroundcolor=\color{fondo}, frame=single,
   rulecolor=\color{fondo}, breaklines=true, columns=fullflexible, keepspaces=true,
   showstringspaces=false, breakindent=2em
 }
@@ -117,7 +117,7 @@ El documento describe la arquitectura del programa (sección~\ref{sec:arq}), cad
 de solicitud con el código que lo implementa (secciones~\ref{sec:a} a~\ref{sec:c}), el
 manejo del tiempo máximo y la forma de medir los tiempos (sección~\ref{sec:caos}), el uso
 de Git (sección~\ref{sec:git}) y corridas de ejemplo (sección~\ref{sec:corridas}). La
-sección~\ref{sec:exp} corresponde a la parte 0x02: siete experimentos que comparan el
+sección~\ref{sec:exp} corresponde a la parte 0x02: seis experimentos que comparan el
 comportamiento de los casos y escenarios, con su análisis. Al final se presentan las
 conclusiones.
 
@@ -144,13 +144,13 @@ procesos, los pipes y la memoria compartida.
   >=Latex]
 \node[box] (box) at (0,0) {Box (main)\\[-1pt]\normalfont\scriptsize lee solicitudes, informe final};
 \node[proc] (r) at (0,-2.1) {Meeseeks raíz\\\scriptsize $N=1,\ i=1$};
-\node[proc] (a1) at (-4.6,-4.4) {$N=2,\ i=1$};
-\node[proc] (a2) at (-2.3,-4.4) {$N=2,\ i=2$};
+\node[proc] (a1) at (-5.4,-4.4) {$N=2,\ i=1$};
+\node[proc] (a2) at (-2.7,-4.4) {$N=2,\ i=2$};
 \node[font=\large] (dots) at (0,-4.4) {$\cdots$};
-\node[proc] (a5) at (2.3,-4.4) {$N=2,\ i=5$};
-\node[proc] (b1) at (-5.6,-6.6) {$N=3,\ i=1$};
-\node[proc] (b2) at (-3.4,-6.6) {$N=3,\ i=2$};
-\node[font=\small, align=center, text=tinta] at (1.2,-6.6) {\dots\ el árbol crece mientras\\la dificultad no se diluya};
+\node[proc] (a5) at (2.7,-4.4) {$N=2,\ i=5$};
+\node[proc] (b1) at (-6.8,-6.6) {$N=3,\ i=1$};
+\node[proc] (b2) at (-4.1,-6.6) {$N=3,\ i=2$};
+\node[font=\small, align=center, text=tinta] at (-0.4,-6.6) {\dots\ el árbol crece mientras\\la dificultad no se diluya};
 \draw[down] (box.south) to[bend right=18] node[left, font=\scriptsize]{pipe down (M\_TASK)} (r.north);
 \draw[up] (r.north) to[bend right=18] node[right, font=\scriptsize]{pipe up (resultado)} (box.south);
 \foreach \k in {a1,a2,a5}{ \draw[down] (r) -- (\k); }
@@ -161,7 +161,7 @@ procesos, los pipes y la memoria compartida.
 \draw[aqua, densely dotted, thick] (sh.west) -- (box.east);
 \draw[aqua, densely dotted, thick] (sh.south west) -- (r.east);
 \draw[aqua, densely dotted, thick] (sh.south) -- (a5.north east);
-\node[font=\scriptsize, align=left, anchor=north west] at (3.6,-5.4) {%
+\node[font=\scriptsize, align=left, anchor=north west] at (2.6,-6.0) {%
 \textcolor{azul}{\rule[0.5ex]{0.6cm}{1pt}} pipe privado padre $\to$ hijo\\
 \textcolor{naranja}{\rule[0.5ex]{0.15cm}{1pt}\,\rule[0.5ex]{0.15cm}{1pt}\,\rule[0.5ex]{0.15cm}{1pt}} pipe compartido hijos $\to$ padre\\
 \textcolor{aqua}{$\cdot\cdot\cdot\cdot$} acceso a memoria compartida};
@@ -252,27 +252,27 @@ de su pipe privado. Todos los mensajes que imprime un Meeseeks llevan el prefijo
   ar/.style={-{Latex[length=2mm]}, thick, tinta}, lab/.style={font=\scriptsize, text=tinta}]
 \node[st] (n) {Nace y saluda\\\scriptsize\texttt{(pid, ppid, N, i)}};
 \node[st, right=0.9cm of n] (r) {Lee \texttt{M\_TASK}\\\scriptsize por su pipe};
-\node[st, right=0.9cm of r] (w) {Trabaja $t$ segundos\\\scriptsize\texttt{poll()} sobre su pipe};
+\node[st, right=0.9cm of r] (w) {Trabaja $t$ segundos\\\scriptsize\texttt{ppoll()} sobre su pipe};
 \node[dec, below=0.9cm of w] (d) {¿$d>85$ o\\Tiro Meeseeks?};
 \node[fin, below left=0.7cm and 0.4cm of d] (s) {Reclama victoria,\\avisa al padre, desaparece};
 \node[st, below right=0.7cm and 0.2cm of d] (h) {Pide ayuda: 5 si $d\le45$,\\2 si $45<d\le85$};
 \node[st, below=0.8cm of h] (e) {Espera a sus hijos\\\scriptsize\texttt{poll()} pipe padre + pipe hijos};
-\node[fin, below=0.8cm of s] (x) {Detiene a sus hijos,\\se despide y desaparece};
+\node[fin, below=1.3cm of e] (x) {Detiene a sus hijos,\\se despide y desaparece};
 \draw[ar] (n) -- (r);
 \draw[ar] (r) -- (w);
 \draw[ar] (w) -- (d);
 \draw[ar] (d) -| node[lab, above, pos=0.25]{sí} (s);
 \draw[ar] (d) -| node[lab, above, pos=0.25]{no} (h);
 \draw[ar] (h) -- (e);
-\draw[ar] (e) -- node[lab, above, align=center]{hijo resolvió (\texttt{M\_SOLVED}),\\ \texttt{M\_STOP} o todos fallaron} (x);
-\draw[ar] (w.north) to[out=60,in=120,looseness=4] node[lab, above]{\texttt{M\_STOP}: desaparece} (w.north);
+\draw[ar] (e) -- node[lab, left, align=right]{hijo resolvió (\texttt{M\_SOLVED}),\\ \texttt{M\_STOP} o todos fallaron} (x);
+\draw[ar] ([xshift=6mm]w.north) .. controls +(0.4,0.9) and +(-0.4,0.9) .. node[lab, above]{\texttt{M\_STOP}: se despide y desaparece} ([xshift=-6mm]w.north);
 \end{tikzpicture}
 \caption{Estados de un Mr.\ Meeseeks que atiende una solicitud de texto.}
 \label{fig:estados}
 \end{figure}
 
 Mientras simula su trabajo, el Meeseeks no duerme con \texttt{sleep()}: espera con
-\texttt{poll()} sobre su pipe privado, de manera que si otro Meeseeks resuelve la tarea
+\texttt{ppoll()} sobre su pipe privado, de manera que si otro Meeseeks resuelve la tarea
 y le llega \texttt{M\_STOP}, se despide y desaparece de inmediato en lugar de terminar su
 espera.
 

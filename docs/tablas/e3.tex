@@ -1,0 +1,13 @@
+\begin{tabular}{lrrrrrr}
+\toprule
+Caso & n & Éxito & Media (ms) & Mediana (ms) & P95 (ms) & CPU (ms) \\
+\midrule
+A: texto d=100 (1 Meeseeks) & 200 & 100\,\% & 0.319 & 0.276 & 0.531 & 0.230 \\
+B: calc (válido) & 150 & 100\,\% & 0.282 & 0.256 & 0.376 & 0.278 \\
+B: calc (error) & 50 & 0\,\% & 0.253 & 0.230 & 0.407 & 0.254 \\
+C: run true & 200 & 100\,\% & 2.400 & 2.332 & 2.851 & 2.253 \\
+C: run false & 50 & 0\,\% & 2.133 & 2.019 & 2.721 & 2.135 \\
+C: run ls /usr/bin & 50 & 100\,\% & 5.878 & 5.472 & 7.382 & 5.616 \\
+C: run sleep 0.25 & 20 & 100\,\% & 255.429 & 255.288 & 256.103 & 4.929 \\
+\bottomrule
+\end{tabular}

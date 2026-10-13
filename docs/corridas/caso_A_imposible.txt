@@ -1,0 +1,86 @@
++--------------------------------------------------------------+
+|             BOX DE MR. MEESEEKS   (IC-6600, ITCR)            |
+|  Escriba una solicitud, 'calc <expr>', 'run <comando>'       |
+|  o despidase con 'adios'.                                    |
++--------------------------------------------------------------+
+Configuracion: tiempo maximo 300 s | tope 60 Meeseeks | 128 trabajando a la vez | ganancia 0.50
+
+Box> Quiero que Jerry sea interesante
+  Dificultad 0-100 (Enter = a la suerte del Meeseeks): 0
+  Duracion simulada en s (Enter = aleatoria 0.5-5): 0.2
+[Box    pid 22133 | ppid 22065] Advertencia: dificultad 0 = tarea imposible. Se aplicara el plan de contingencia.
+[Box    pid 22133 | ppid 22065] Boton presionado: Mr. Meeseeks raiz (pid 22134) atendera la solicitud #1 [texto] "Quiero que Jerry sea interesante"
+[pid 22134 | ppid 22133 | N=1 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22134, 22133, 1, 1)
+[pid 22134 | ppid 22133 | N=1 i=1] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.20 s...
+[pid 22134 | ppid 22133 | N=1 i=1] Esta tarea es IMPOSIBLE (dificultad 0.00)! La existencia es dolor! Invoco 5 Mr. Meeseeks mas (nivel 2)...
+[pid 22135 | ppid 22134 | N=2 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22135, 22134, 2, 1)
+[pid 22135 | ppid 22134 | N=2 i=1] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.30 s...
+[pid 22137 | ppid 22134 | N=2 i=3] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22137, 22134, 2, 3)
+[pid 22137 | ppid 22134 | N=2 i=3] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.30 s...
+[pid 22139 | ppid 22134 | N=2 i=5] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22139, 22134, 2, 5)
+[pid 22136 | ppid 22134 | N=2 i=2] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22136, 22134, 2, 2)
+[pid 22139 | ppid 22134 | N=2 i=5] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.30 s...
+[pid 22136 | ppid 22134 | N=2 i=2] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.30 s...
+[pid 22138 | ppid 22134 | N=2 i=4] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22138, 22134, 2, 4)
+[pid 22138 | ppid 22134 | N=2 i=4] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.30 s...
+[pid 22135 | ppid 22134 | N=2 i=1] Esta tarea es IMPOSIBLE (dificultad 0.00)! La existencia es dolor! Invoco 5 Mr. Meeseeks mas (nivel 3)...
+[pid 22138 | ppid 22134 | N=2 i=4] Esta tarea es IMPOSIBLE (dificultad 0.00)! La existencia es dolor! Invoco 5 Mr. Meeseeks mas (nivel 3)...
+[pid 22140 | ppid 22135 | N=3 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22140, 22135, 3, 1)
+[pid 22140 | ppid 22135 | N=3 i=1] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.40 s...
+[pid 22141 | ppid 22135 | N=3 i=2] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22141, 22135, 3, 2)
+[pid 22141 | ppid 22135 | N=3 i=2] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.40 s...
+[pid 22143 | ppid 22135 | N=3 i=3] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22143, 22135, 3, 3)
+[pid 22143 | ppid 22135 | N=3 i=3] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.40 s...
+[pid 22142 | ppid 22138 | N=3 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22142, 22138, 3, 1)
+[pid 22142 | ppid 22138 | N=3 i=1] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.40 s...
+[pid 22144 | ppid 22135 | N=3 i=4] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22144, 22135, 3, 4)
+[pid 22144 | ppid 22135 | N=3 i=4] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.40 s...
+[pid 22145 | ppid 22138 | N=3 i=2] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22145, 22138, 3, 2)
+[pid 22145 | ppid 22138 | N=3 i=2] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.40 s...
+[pid 22147 | ppid 22138 | N=3 i=3] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22147, 22138, 3, 3)
+[pid 22147 | ppid 22138 | N=3 i=3] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.40 s...
+[pid 22146 | ppid 22135 | N=3 i=5] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22146, 22135, 3, 5)
+[pid 22146 | ppid 22135 | N=3 i=5] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.40 s...
+[pid 22148 | ppid 22138 | N=3 i=4] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22148, 22138, 3, 4)
+[pid 22148 | ppid 22138 | N=3 i=4] Recibi por mi pipe la solicitud "Quiero que Jerry sea interesante" (dificultad 0.00). Ooooh, puedo hacerlo! Trabajando 0.40 s...
+      [... 231 lineas omitidas; salida completa en runs/caso_A_imposible.txt ...]
+[pid 22182 | ppid 22146 | N=4 i=5] Contingencia: no puedo invocar mas Mr. Meeseeks (tope de 60 por solicitud o fork fallido).
+[pid 22182 | ppid 22146 | N=4 i=5] Ninguno de mis ayudantes pudo con "Quiero que Jerry sea interesante". La existencia es dolor! Me rindo. *puff*
+[pid 22194 | ppid 22148 | N=4 i=1] Esta tarea es IMPOSIBLE (dificultad 0.00)! La existencia es dolor! Invoco 5 Mr. Meeseeks mas (nivel 5)...
+[pid 22194 | ppid 22148 | N=4 i=1] Contingencia: no puedo invocar mas Mr. Meeseeks (tope de 60 por solicitud o fork fallido).
+[pid 22194 | ppid 22148 | N=4 i=1] Ninguno de mis ayudantes pudo con "Quiero que Jerry sea interesante". La existencia es dolor! Me rindo. *puff*
+[pid 22185 | ppid 22159 | N=4 i=5] Esta tarea es IMPOSIBLE (dificultad 0.00)! La existencia es dolor! Invoco 5 Mr. Meeseeks mas (nivel 5)...
+[pid 22185 | ppid 22159 | N=4 i=5] Contingencia: no puedo invocar mas Mr. Meeseeks (tope de 60 por solicitud o fork fallido).
+[pid 22185 | ppid 22159 | N=4 i=5] Ninguno de mis ayudantes pudo con "Quiero que Jerry sea interesante". La existencia es dolor! Me rindo. *puff*
+[pid 22146 | ppid 22135 | N=3 i=5] Ninguno de mis ayudantes pudo con "Quiero que Jerry sea interesante". La existencia es dolor! Me rindo. *puff*
+[pid 22135 | ppid 22134 | N=2 i=1] Ninguno de mis ayudantes pudo con "Quiero que Jerry sea interesante". La existencia es dolor! Me rindo. *puff*
+[pid 22184 | ppid 22159 | N=4 i=4] Esta tarea es IMPOSIBLE (dificultad 0.00)! La existencia es dolor! Invoco 5 Mr. Meeseeks mas (nivel 5)...
+[pid 22184 | ppid 22159 | N=4 i=4] Contingencia: no puedo invocar mas Mr. Meeseeks (tope de 60 por solicitud o fork fallido).
+[pid 22184 | ppid 22159 | N=4 i=4] Ninguno de mis ayudantes pudo con "Quiero que Jerry sea interesante". La existencia es dolor! Me rindo. *puff*
+[pid 22191 | ppid 22149 | N=4 i=1] Esta tarea es IMPOSIBLE (dificultad 0.00)! La existencia es dolor! Invoco 5 Mr. Meeseeks mas (nivel 5)...
+[pid 22191 | ppid 22149 | N=4 i=1] Contingencia: no puedo invocar mas Mr. Meeseeks (tope de 60 por solicitud o fork fallido).
+[pid 22191 | ppid 22149 | N=4 i=1] Ninguno de mis ayudantes pudo con "Quiero que Jerry sea interesante". La existencia es dolor! Me rindo. *puff*
+[pid 22192 | ppid 22149 | N=4 i=2] Esta tarea es IMPOSIBLE (dificultad 0.00)! La existencia es dolor! Invoco 5 Mr. Meeseeks mas (nivel 5)...
+[pid 22192 | ppid 22149 | N=4 i=2] Contingencia: no puedo invocar mas Mr. Meeseeks (tope de 60 por solicitud o fork fallido).
+[pid 22192 | ppid 22149 | N=4 i=2] Ninguno de mis ayudantes pudo con "Quiero que Jerry sea interesante". La existencia es dolor! Me rindo. *puff*
+[pid 22149 | ppid 22138 | N=3 i=5] Ninguno de mis ayudantes pudo con "Quiero que Jerry sea interesante". La existencia es dolor! Me rindo. *puff*
+[pid 22148 | ppid 22138 | N=3 i=4] Ninguno de mis ayudantes pudo con "Quiero que Jerry sea interesante". La existencia es dolor! Me rindo. *puff*
+[pid 22159 | ppid 22139 | N=3 i=5] Ninguno de mis ayudantes pudo con "Quiero que Jerry sea interesante". La existencia es dolor! Me rindo. *puff*
+[pid 22138 | ppid 22134 | N=2 i=4] Ninguno de mis ayudantes pudo con "Quiero que Jerry sea interesante". La existencia es dolor! Me rindo. *puff*
+[pid 22139 | ppid 22134 | N=2 i=5] Ninguno de mis ayudantes pudo con "Quiero que Jerry sea interesante". La existencia es dolor! Me rindo. *puff*
+[pid 22134 | ppid 22133 | N=1 i=1] Ninguno de mis ayudantes pudo con "Quiero que Jerry sea interesante". La existencia es dolor! Me rindo. *puff*
+[pid 22134 | ppid 22133 | N=1 i=1] INFORME FINAL: la solicitud "Quiero que Jerry sea interesante" NO pudo completarse.
+[Box    pid 22133 | ppid 22065] Solicitud #1 NO COMPLETADA. Tiempo total 1.4087 s | espera simulada 1.4000 s | tiempo real 0.0087 s | CPU 0.0219 s
+[Box    pid 22133 | ppid 22065]    Mr. Meeseeks creados: 60 | nivel maximo: 4 | pico simultaneo: 58 | se activo el tope de contingencia
+
+Box> adios
+[Box    pid 22133 | ppid 22065] El usuario se despide. Cerrando la Box...
+
+==================================== INFORME DE LA BOX ====================================
+#   Tipo  Solicitud                     Dific Estado          T.total    T.real      CPU Meeseeks  Niv  Resolvio (pid,ppid,N,i)
+1   texto Quiero que Jerry sea interes   0.00 no completada   1.4087s   0.0087s  0.0219s       60    4  -
+-------------------------------------------------------------------------------------------
+Solicitudes: 1 | completadas: 0 | no completadas: 1 | caos: 0   (* dificultad a la suerte)
+T.real = tiempo total menos la espera simulada del camino critico.
+===========================================================================================
+[Box    pid 22133 | ppid 22065] Gracias por usar la Box de Mr. Meeseeks. Hasta luego!

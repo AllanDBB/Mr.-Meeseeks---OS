@@ -1,0 +1,54 @@
++--------------------------------------------------------------+
+|             BOX DE MR. MEESEEKS   (IC-6600, ITCR)            |
+|  Escriba una solicitud, 'calc <expr>', 'run <comando>'       |
+|  o despidase con 'adios'.                                    |
++--------------------------------------------------------------+
+Configuracion: tiempo maximo 300 s | tope 3000 Meeseeks | 128 trabajando a la vez | ganancia 0.50
+
+Box> run ls -l src
+[Box    pid 22044 | ppid 22029] Boton presionado: Mr. Meeseeks raiz (pid 22045) atendera la solicitud #1 [run] "ls -l src"
+[pid 22045 | ppid 22044 | N=1 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22045, 22044, 1, 1)
+[pid 22045 | ppid 22044 | N=1 i=1] Recibi por mi pipe la orden de ejecutar: ls -l src. Ooooh, a la orden!
+[pid 22045 | ppid 22044 | N=1 i=1] Programa externo lanzado como pid 22046; espero su valor de retorno...
+total 52
+-rw-r--r-- 1 root root 51007 Oct 12 23:56 meeseeks.c
+[pid 22045 | ppid 22044 | N=1 i=1] El programa termino con exito (codigo de salida 0 en 0.0039 s). Tarea completada! Gracias por dejarme servirle. Adios! *puff*
+[Box    pid 22044 | ppid 22029] Solicitud #1 COMPLETADA. Tiempo total 0.0042 s | espera simulada 0.0000 s | tiempo real 0.0042 s | CPU 0.0043 s
+[Box    pid 22044 | ppid 22029]    Mr. Meeseeks creados: 1 | nivel maximo: 1 | pico simultaneo: 1
+[Box    pid 22044 | ppid 22029]    Resultado: codigo de salida 0 en 0.0039 s
+
+Box> run gcc --version | head -1
+[Box    pid 22044 | ppid 22029] Boton presionado: Mr. Meeseeks raiz (pid 22048) atendera la solicitud #2 [run] "gcc --version | head -1"
+[pid 22048 | ppid 22044 | N=1 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22048, 22044, 1, 1)
+[pid 22048 | ppid 22044 | N=1 i=1] Recibi por mi pipe la orden de ejecutar: gcc --version | head -1. Ooooh, a la orden!
+[pid 22048 | ppid 22044 | N=1 i=1] Programa externo lanzado como pid 22049; espero su valor de retorno...
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+[pid 22048 | ppid 22044 | N=1 i=1] El programa termino con exito (codigo de salida 0 en 0.0041 s). Tarea completada! Gracias por dejarme servirle. Adios! *puff*
+[Box    pid 22044 | ppid 22029] Solicitud #2 COMPLETADA. Tiempo total 0.0043 s | espera simulada 0.0000 s | tiempo real 0.0043 s | CPU 0.0060 s
+[Box    pid 22044 | ppid 22029]    Mr. Meeseeks creados: 1 | nivel maximo: 1 | pico simultaneo: 1
+[Box    pid 22044 | ppid 22029]    Resultado: codigo de salida 0 en 0.0041 s
+
+Box> run programa_inexistente
+[Box    pid 22044 | ppid 22029] Boton presionado: Mr. Meeseeks raiz (pid 22052) atendera la solicitud #3 [run] "programa_inexistente"
+[pid 22052 | ppid 22044 | N=1 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22052, 22044, 1, 1)
+[pid 22052 | ppid 22044 | N=1 i=1] Recibi por mi pipe la orden de ejecutar: programa_inexistente. Ooooh, a la orden!
+[pid 22052 | ppid 22044 | N=1 i=1] Programa externo lanzado como pid 22053; espero su valor de retorno...
+sh: 1: programa_inexistente: not found
+[pid 22052 | ppid 22044 | N=1 i=1] El programa NO termino con exito (codigo de salida 127 (comando no encontrado) en 0.0019 s). La existencia es dolor! *puff*
+[Box    pid 22044 | ppid 22029] Solicitud #3 NO COMPLETADA. Tiempo total 0.0021 s | espera simulada 0.0000 s | tiempo real 0.0021 s | CPU 0.0020 s
+[Box    pid 22044 | ppid 22029]    Mr. Meeseeks creados: 1 | nivel maximo: 1 | pico simultaneo: 1
+[Box    pid 22044 | ppid 22029]    Resultado: codigo de salida 127 (comando no encontrado) en 0.0019 s
+
+Box> adios
+[Box    pid 22044 | ppid 22029] El usuario se despide. Cerrando la Box...
+
+==================================== INFORME DE LA BOX ====================================
+#   Tipo  Solicitud                     Dific Estado          T.total    T.real      CPU Meeseeks  Niv  Resolvio (pid,ppid,N,i)
+1   run   ls -l src                         - completada      0.0042s   0.0042s  0.0043s        1    1  (22045, 22044, 1, 1)
+2   run   gcc --version | head -1           - completada      0.0043s   0.0043s  0.0060s        1    1  (22048, 22044, 1, 1)
+3   run   programa_inexistente              - no completada   0.0021s   0.0021s  0.0020s        1    1  -
+-------------------------------------------------------------------------------------------
+Solicitudes: 3 | completadas: 2 | no completadas: 1 | caos: 0   (* dificultad a la suerte)
+T.real = tiempo total menos la espera simulada del camino critico.
+===========================================================================================
+[Box    pid 22044 | ppid 22029] Gracias por usar la Box de Mr. Meeseeks. Hasta luego!
