@@ -79,7 +79,7 @@ if e1 is not None:
     ax.fill_between(pos.index, pos.mee25, pos.mee75, color=C1, alpha=0.18, lw=0)
     ax.plot(pos.index, pos.mee, color=C1, marker="o", ms=4)
     ax.axhline(3000, color=C2, lw=1.2, ls="--")
-    ax.text(0.012, 3000 * 1.15, "tope -m 3000 (d = 0 siempre lo agota)", color=INK2, fontsize=7.5)
+    ax.text(0.012, 3000 * 0.55, "tope -m 3000 (d = 0 siempre lo agota)", color=INK2, fontsize=7.5)
     ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xlabel("dificultad d (escala log)"); ax.set_ylabel("Mr. Meeseeks creados")
     ax.set_title("Meeseeks por solicitud (mediana y RIC)", fontsize=9, color=INK)
@@ -90,22 +90,32 @@ if e1 is not None:
     ax.set_title("Profundidad del árbol", fontsize=9, color=INK)
     save(fig, "e1_costo.pdf")
 
-    # Tiempo real vs Meeseeks creados (todas las corridas, incluida d = 0)
-    x, y = e1.meeseeks.values, e1.t_real.values
+    # Tiempo real vs Meeseeks creados: ajuste solo con solicitudes resueltas
+    ok = e1[e1.estado == 1]
+    imp = e1[e1.estado != 1]
+    x, y = ok.meeseeks.values, ok.t_real.values
     m, b = np.polyfit(x, y, 1)
     r2 = np.corrcoef(x, y)[0, 1] ** 2
-    xc, yc = e1.meeseeks.values, e1.cpu.values
-    mc, bc = np.polyfit(xc, yc, 1)
+    mc, bc = np.polyfit(ok.meeseeks.values, ok.cpu.values, 1)
     summary["e1_fit"] = (m, b, r2, mc)
-    fig, ax = plt.subplots(figsize=(4.6, 3.0))
-    ax.scatter(x, y * 1000, s=10, color=C1, alpha=0.55, lw=0, label="corridas")
+    fig, axes = plt.subplots(1, 2, figsize=(7.2, 2.9))
+    ax = axes[0]
+    ax.scatter(x, y * 1000, s=10, color=C1, alpha=0.55, lw=0, label="solicitudes resueltas (d > 0)")
     xs = np.linspace(0, x.max(), 50)
     ax.plot(xs, (m * xs + b) * 1000, color=C2, lw=1.5, label=f"ajuste: {m*1e6:.0f} µs por Meeseeks (R² = {r2:.2f})")
-    ax.set_xlabel("Mr. Meeseeks creados en la solicitud"); ax.set_ylabel("T real (ms)")
-    ax.legend(fontsize=7.5, loc="upper left")
+    ax.set_xlabel("Mr. Meeseeks creados"); ax.set_ylabel("T real (ms)")
+    ax.set_title("Tareas posibles", fontsize=9)
+    ax.legend(fontsize=7, loc="upper left")
+    ax = axes[1]
+    ax.scatter(ok.meeseeks, ok.cpu, s=10, color=C1, alpha=0.55, lw=0, label="d > 0")
+    ax.scatter(imp.meeseeks, imp.cpu, s=16, color=C2, alpha=0.8, lw=0, label="d = 0 (tope 3000)")
+    ax.set_xlabel("Mr. Meeseeks creados"); ax.set_ylabel("CPU de los descendientes (s)")
+    ax.set_title("Costo de CPU", fontsize=9)
+    ax.legend(fontsize=7, loc="upper left")
     save(fig, "e1_overhead.pdf")
+    summary["e1_imp"] = (imp.t_real.median(), imp.cpu.median(), imp.t_total.median())
     with open(os.path.join(TABS, "e1_fit.tex"), "w") as f:
-        f.write("\\newcommand{\\EfitUs}{%.0f}\\newcommand{\\EfitR}{%.2f}\\newcommand{\\EfitB}{%.1f}"
+        f.write("\\newcommand{\\EfitUs}{%.0f}\\newcommand{\\EfitR}{%.2f}\\newcommand{\\EfitB}{%.2f}"
                 "\\newcommand{\\EfitCpuUs}{%.0f}\n" % (m * 1e6, r2, b * 1000, mc * 1e6))
 
 # --------------------------------------------------------------------- E2
@@ -171,7 +181,7 @@ if e3 is not None:
     fig, ax = plt.subplots(figsize=(7.0, 2.9))
     data = [e3[e3.grupo == gname].t_real.values * 1000 for gname in order]
     colors = [C1, C2, C2, C3, C3, C3, C3]
-    bp = ax.boxplot(data, vert=False, patch_artist=True, widths=0.6,
+    bp = ax.boxplot(data, orientation="horizontal", patch_artist=True, widths=0.6,
                     medianprops=dict(color=INK, lw=1.2), flierprops=dict(ms=2.5))
     for patch, c in zip(bp["boxes"], colors):
         patch.set_facecolor(c); patch.set_alpha(0.35); patch.set_edgecolor(c)

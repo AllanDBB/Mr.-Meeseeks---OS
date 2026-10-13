@@ -296,7 +296,9 @@ static void vanish(int code)
 }
 
 /* Duerme "dur" segundos simulando trabajo, pero sigue escuchando su pipe:
- * si llega M_STOP (o el padre desaparece) devuelve 1 de inmediato.         */
+ * si llega M_STOP (o el padre desaparece) devuelve 1 de inmediato.
+ * Se usa ppoll() porque poll() solo acepta milisegundos enteros y
+ * redondeaba hacia arriba duraciones muy cortas.                           */
 static int work_or_stop(int in_fd, double dur)
 {
     double start = now_s(), end = start + dur;
@@ -304,7 +306,10 @@ static int work_or_stop(int in_fd, double dur)
         double rem = end - now_s();
         if (rem <= 0) break;
         struct pollfd p = { in_fd, POLLIN, 0 };
-        int r = poll(&p, 1, (int)(rem * 1000.0) + 1);
+        struct timespec to;                 /* ppoll: resolucion de ns */
+        to.tv_sec  = (time_t)rem;
+        to.tv_nsec = (long)((rem - (double)to.tv_sec) * 1e9);
+        int r = ppoll(&p, 1, &to, NULL);
         if (r < 0 && errno == EINTR) continue;
         if (r > 0) {
             msg_t m;
