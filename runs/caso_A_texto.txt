@@ -1,0 +1,108 @@
++--------------------------------------------------------------+
+|             BOX DE MR. MEESEEKS   (IC-6600, ITCR)            |
+|  Escriba una solicitud, 'calc <expr>', 'run <comando>'       |
+|  o despidase con 'adios'.                                    |
++--------------------------------------------------------------+
+Configuracion: tiempo maximo 300 s | tope 3000 Meeseeks | 128 trabajando a la vez | ganancia 0.50
+
+Box> Quiero un cafe frances
+  Dificultad 0-100 (Enter = a la suerte del Meeseeks): 95
+  Duracion simulada en s (Enter = aleatoria 0.5-5): 
+[Box    pid 22067 | ppid 22065] Boton presionado: Mr. Meeseeks raiz (pid 22068) atendera la solicitud #1 [texto] "Quiero un cafe frances"
+[pid 22068 | ppid 22067 | N=1 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22068, 22067, 1, 1)
+[pid 22068 | ppid 22067 | N=1 i=1] Recibi por mi pipe la solicitud "Quiero un cafe frances" (dificultad 95.00). Ooooh, puedo hacerlo! Trabajando 1.12 s...
+[pid 22068 | ppid 22067 | N=1 i=1] Solicitud completada: "Quiero un cafe frances"! Gracias por dejarme servirle. Adios! *puff*
+[pid 22068 | ppid 22067 | N=1 i=1] INFORME FINAL: la solicitud "Quiero un cafe frances" fue resuelta por Mr. Meeseeks (pid 22068, ppid 22067, N=1, i=1).
+[Box    pid 22067 | ppid 22065] Solicitud #1 COMPLETADA. Tiempo total 1.1208 s | espera simulada 1.1180 s | tiempo real 0.0027 s | CPU 0.0005 s
+[Box    pid 22067 | ppid 22065]    Mr. Meeseeks creados: 1 | nivel maximo: 1 | pico simultaneo: 1
+
+Box> Quiero ser feliz
+  Dificultad 0-100 (Enter = a la suerte del Meeseeks): 60
+  Duracion simulada en s (Enter = aleatoria 0.5-5): 
+[Box    pid 22067 | ppid 22065] Boton presionado: Mr. Meeseeks raiz (pid 22070) atendera la solicitud #2 [texto] "Quiero ser feliz"
+[pid 22070 | ppid 22067 | N=1 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22070, 22067, 1, 1)
+[pid 22070 | ppid 22067 | N=1 i=1] Recibi por mi pipe la solicitud "Quiero ser feliz" (dificultad 60.00). Ooooh, puedo hacerlo! Trabajando 1.49 s...
+[pid 22070 | ppid 22067 | N=1 i=1] Esto es mas dificil de lo que pense (dificultad 60.00). Necesito ayuda! Invoco 2 Mr. Meeseeks (nivel 2)...
+[pid 22071 | ppid 22070 | N=2 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22071, 22070, 2, 1)
+[pid 22071 | ppid 22070 | N=2 i=1] Recibi por mi pipe la solicitud "Quiero ser feliz" (dificultad 75.66). Ooooh, puedo hacerlo! Trabajando 2.36 s...
+[pid 22072 | ppid 22070 | N=2 i=2] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22072, 22070, 2, 2)
+[pid 22072 | ppid 22070 | N=2 i=2] Recibi por mi pipe la solicitud "Quiero ser feliz" (dificultad 83.28). Ooooh, puedo hacerlo! Trabajando 2.73 s...
+[pid 22071 | ppid 22070 | N=2 i=1] Tiro Meeseeks exitoso! (probabilidad 0.4330, saque 0.4251). Lo logre sin pedir ayuda.
+[pid 22071 | ppid 22070 | N=2 i=1] Solicitud completada: "Quiero ser feliz"! Gracias por dejarme servirle. Adios! *puff*
+[pid 22070 | ppid 22067 | N=1 i=1] Mi ayudante reporta que Mr. Meeseeks (pid 22071, ppid 22070, N=2, i=1) resolvio la solicitud! Aviso a mis hijos para que desaparezcan.
+[pid 22072 | ppid 22070 | N=2 i=2] Me avisan por el pipe que la solicitud ya fue cumplida. Adios! *puff*
+[pid 22070 | ppid 22067 | N=1 i=1] Mi trabajo aqui termino. Gracias por permitirme servirle. Adios! *puff*
+[pid 22070 | ppid 22067 | N=1 i=1] INFORME FINAL: la solicitud "Quiero ser feliz" fue resuelta por Mr. Meeseeks (pid 22071, ppid 22070, N=2, i=1).
+[Box    pid 22067 | ppid 22065] Solicitud #2 COMPLETADA. Tiempo total 3.8558 s | espera simulada 3.8511 s | tiempo real 0.0046 s | CPU 0.0018 s
+[Box    pid 22067 | ppid 22065]    Mr. Meeseeks creados: 3 | nivel maximo: 2 | pico simultaneo: 3
+
+Box> Quiero mejorar mi swing de golf
+  Dificultad 0-100 (Enter = a la suerte del Meeseeks): 30
+  Duracion simulada en s (Enter = aleatoria 0.5-5): 
+[Box    pid 22067 | ppid 22065] Boton presionado: Mr. Meeseeks raiz (pid 22074) atendera la solicitud #3 [texto] "Quiero mejorar mi swing de golf"
+[pid 22074 | ppid 22067 | N=1 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22074, 22067, 1, 1)
+[pid 22074 | ppid 22067 | N=1 i=1] Recibi por mi pipe la solicitud "Quiero mejorar mi swing de golf" (dificultad 30.00). Ooooh, puedo hacerlo! Trabajando 4.68 s...
+[pid 22074 | ppid 22067 | N=1 i=1] Esto es mas dificil de lo que pense (dificultad 30.00). Necesito ayuda! Invoco 5 Mr. Meeseeks (nivel 2)...
+[pid 22079 | ppid 22074 | N=2 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22079, 22074, 2, 1)
+[pid 22079 | ppid 22074 | N=2 i=1] Recibi por mi pipe la solicitud "Quiero mejorar mi swing de golf" (dificultad 50.49). Ooooh, puedo hacerlo! Trabajando 1.50 s...
+[pid 22080 | ppid 22074 | N=2 i=2] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22080, 22074, 2, 2)
+[pid 22080 | ppid 22074 | N=2 i=2] Recibi por mi pipe la solicitud "Quiero mejorar mi swing de golf" (dificultad 54.32). Ooooh, puedo hacerlo! Trabajando 2.63 s...
+[pid 22081 | ppid 22074 | N=2 i=3] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22081, 22074, 2, 3)
+[pid 22081 | ppid 22074 | N=2 i=3] Recibi por mi pipe la solicitud "Quiero mejorar mi swing de golf" (dificultad 53.38). Ooooh, puedo hacerlo! Trabajando 2.34 s...
+[pid 22083 | ppid 22074 | N=2 i=5] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22083, 22074, 2, 5)
+[pid 22083 | ppid 22074 | N=2 i=5] Recibi por mi pipe la solicitud "Quiero mejorar mi swing de golf" (dificultad 50.09). Ooooh, puedo hacerlo! Trabajando 0.67 s...
+[pid 22082 | ppid 22074 | N=2 i=4] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22082, 22074, 2, 4)
+[pid 22082 | ppid 22074 | N=2 i=4] Recibi por mi pipe la solicitud "Quiero mejorar mi swing de golf" (dificultad 50.77). Ooooh, puedo hacerlo! Trabajando 1.65 s...
+[pid 22083 | ppid 22074 | N=2 i=5] Esto es mas dificil de lo que pense (dificultad 50.09). Necesito ayuda! Invoco 2 Mr. Meeseeks (nivel 3)...
+[pid 22085 | ppid 22083 | N=3 i=2] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22085, 22083, 3, 2)
+[pid 22085 | ppid 22083 | N=3 i=2] Recibi por mi pipe la solicitud "Quiero mejorar mi swing de golf" (dificultad 72.37). Ooooh, puedo hacerlo! Trabajando 3.89 s...
+[pid 22084 | ppid 22083 | N=3 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22084, 22083, 3, 1)
+[pid 22084 | ppid 22083 | N=3 i=1] Recibi por mi pipe la solicitud "Quiero mejorar mi swing de golf" (dificultad 61.37). Ooooh, puedo hacerlo! Trabajando 1.13 s...
+[pid 22079 | ppid 22074 | N=2 i=1] Esto es mas dificil de lo que pense (dificultad 50.49). Necesito ayuda! Invoco 2 Mr. Meeseeks (nivel 3)...
+[pid 22086 | ppid 22079 | N=3 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22086, 22079, 3, 1)
+[pid 22086 | ppid 22079 | N=3 i=1] Recibi por mi pipe la solicitud "Quiero mejorar mi swing de golf" (dificultad 64.69). Ooooh, puedo hacerlo! Trabajando 3.37 s...
+[pid 22087 | ppid 22079 | N=3 i=2] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22087, 22079, 3, 2)
+[pid 22087 | ppid 22079 | N=3 i=2] Recibi por mi pipe la solicitud "Quiero mejorar mi swing de golf" (dificultad 61.30). Ooooh, puedo hacerlo! Trabajando 3.91 s...
+[pid 22082 | ppid 22074 | N=2 i=4] Esto es mas dificil de lo que pense (dificultad 50.77). Necesito ayuda! Invoco 2 Mr. Meeseeks (nivel 3)...
+[pid 22088 | ppid 22082 | N=3 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22088, 22082, 3, 1)
+[pid 22088 | ppid 22082 | N=3 i=1] Recibi por mi pipe la solicitud "Quiero mejorar mi swing de golf" (dificultad 73.58). Ooooh, puedo hacerlo! Trabajando 2.12 s...
+[pid 22089 | ppid 22082 | N=3 i=2] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22089, 22082, 3, 2)
+[pid 22089 | ppid 22082 | N=3 i=2] Recibi por mi pipe la solicitud "Quiero mejorar mi swing de golf" (dificultad 69.80). Ooooh, puedo hacerlo! Trabajando 0.95 s...
+[pid 22084 | ppid 22083 | N=3 i=1] Esto es mas dificil de lo que pense (dificultad 61.37). Necesito ayuda! Invoco 2 Mr. Meeseeks (nivel 4)...
+[pid 22091 | ppid 22084 | N=4 i=2] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22091, 22084, 4, 2)
+[pid 22090 | ppid 22084 | N=4 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22090, 22084, 4, 1)
+[pid 22091 | ppid 22084 | N=4 i=2] Recibi por mi pipe la solicitud "Quiero mejorar mi swing de golf" (dificultad 84.10). Ooooh, puedo hacerlo! Trabajando 5.72 s...
+[pid 22090 | ppid 22084 | N=4 i=1] Recibi por mi pipe la solicitud "Quiero mejorar mi swing de golf" (dificultad 71.58). Ooooh, puedo hacerlo! Trabajando 2.90 s...
+[pid 22081 | ppid 22074 | N=2 i=3] Tiro Meeseeks exitoso! (probabilidad 0.1521, saque 0.0490). Lo logre sin pedir ayuda.
+[pid 22081 | ppid 22074 | N=2 i=3] Solicitud completada: "Quiero mejorar mi swing de golf"! Gracias por dejarme servirle. Adios! *puff*
+[pid 22074 | ppid 22067 | N=1 i=1] Mi ayudante reporta que Mr. Meeseeks (pid 22081, ppid 22074, N=2, i=3) resolvio la solicitud! Aviso a mis hijos para que desaparezcan.
+[pid 22080 | ppid 22074 | N=2 i=2] Me avisan por el pipe que la solicitud ya fue cumplida. Adios! *puff*
+[pid 22086 | ppid 22079 | N=3 i=1] Me avisan por el pipe que la solicitud ya fue cumplida. Adios! *puff*
+[pid 22087 | ppid 22079 | N=3 i=2] Me avisan por el pipe que la solicitud ya fue cumplida. Adios! *puff*
+[pid 22088 | ppid 22082 | N=3 i=1] Me avisan por el pipe que la solicitud ya fue cumplida. Adios! *puff*
+[pid 22079 | ppid 22074 | N=2 i=1] Me avisan por el pipe que la solicitud ya fue cumplida. Adios! *puff*
+[pid 22089 | ppid 22082 | N=3 i=2] Me avisan por el pipe que la solicitud ya fue cumplida. Adios! *puff*
+[pid 22085 | ppid 22083 | N=3 i=2] Me avisan por el pipe que la solicitud ya fue cumplida. Adios! *puff*
+[pid 22082 | ppid 22074 | N=2 i=4] Me avisan por el pipe que la solicitud ya fue cumplida. Adios! *puff*
+[pid 22090 | ppid 22084 | N=4 i=1] Me avisan por el pipe que la solicitud ya fue cumplida. Adios! *puff*
+[pid 22091 | ppid 22084 | N=4 i=2] Me avisan por el pipe que la solicitud ya fue cumplida. Adios! *puff*
+[pid 22084 | ppid 22083 | N=3 i=1] Me avisan por el pipe que la solicitud ya fue cumplida. Adios! *puff*
+[pid 22083 | ppid 22074 | N=2 i=5] Me avisan por el pipe que la solicitud ya fue cumplida. Adios! *puff*
+[pid 22074 | ppid 22067 | N=1 i=1] Mi trabajo aqui termino. Gracias por permitirme servirle. Adios! *puff*
+[pid 22074 | ppid 22067 | N=1 i=1] INFORME FINAL: la solicitud "Quiero mejorar mi swing de golf" fue resuelta por Mr. Meeseeks (pid 22081, ppid 22074, N=2, i=3).
+[Box    pid 22067 | ppid 22065] Solicitud #3 COMPLETADA. Tiempo total 7.0323 s | espera simulada 7.0207 s | tiempo real 0.0116 s | CPU 0.0088 s
+[Box    pid 22067 | ppid 22065]    Mr. Meeseeks creados: 14 | nivel maximo: 4 | pico simultaneo: 14
+
+Box> adios
+[Box    pid 22067 | ppid 22065] El usuario se despide. Cerrando la Box...
+
+==================================== INFORME DE LA BOX ====================================
+#   Tipo  Solicitud                     Dific Estado          T.total    T.real      CPU Meeseeks  Niv  Resolvio (pid,ppid,N,i)
+1   texto Quiero un cafe frances        95.00 completada      1.1208s   0.0027s  0.0005s        1    1  (22068, 22067, 1, 1)
+2   texto Quiero ser feliz              60.00 completada      3.8558s   0.0046s  0.0018s        3    2  (22071, 22070, 2, 1)
+3   texto Quiero mejorar mi swing de g  30.00 completada      7.0323s   0.0116s  0.0088s       14    4  (22081, 22074, 2, 3)
+-------------------------------------------------------------------------------------------
+Solicitudes: 3 | completadas: 3 | no completadas: 0 | caos: 0   (* dificultad a la suerte)
+T.real = tiempo total menos la espera simulada del camino critico.
+===========================================================================================
+[Box    pid 22067 | ppid 22065] Gracias por usar la Box de Mr. Meeseeks. Hasta luego!

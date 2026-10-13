@@ -1,0 +1,5 @@
+b7c5b32 2026-10-12 23:30 Estructura inicial del proyecto: README, Makefile y .gitignore
+048ce87 2026-10-12 23:37 Box y Mr. Meeseeks para solicitudes de texto (caso A)
+59d2a11 2026-10-12 23:38 Caso B: evaluador de expresiones aritmeticas y logicas
+46916b1 2026-10-12 23:38 Caso C: ejecucion de programas externos con fork/exec/waitpid
+8572143 2026-10-12 23:39 Script de experimentos para la seccion 0x02

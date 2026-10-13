@@ -1,0 +1,580 @@
+% ============================================================================
+%  SO-T3: Box de Mr. Meeseeks. Reporte (compilar con xelatex dos veces)
+% ============================================================================
+\documentclass[11pt,letterpaper]{article}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{spanish}
+\setmainfont{TeX Gyre Pagella}
+\setmonofont{DejaVu Sans Mono}[Scale=0.80]
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,longtable,multirow}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc,backgrounds}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{azul}{HTML}{2a78d6}
+\definecolor{naranja}{HTML}{eb6834}
+\definecolor{aqua}{HTML}{1baf7a}
+\definecolor{tinta}{HTML}{52514e}
+\definecolor{fondo}{HTML}{f5f5f2}
+
+\lstdefinestyle{c}{
+  language=C, basicstyle=\ttfamily\small, keywordstyle=\color{azul}\bfseries,
+  commentstyle=\color{tinta}\itshape, stringstyle=\color{naranja},
+  numbers=left, numberstyle=\tiny\color{tinta}, numbersep=6pt,
+  backgroundcolor=\color{fondo}, frame=single, rulecolor=\color{fondo},
+  breaklines=true, columns=fullflexible, keepspaces=true, showstringspaces=false,
+  xleftmargin=1.6em, framexleftmargin=1.6em, tabsize=4,
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1
+}
+\lstdefinestyle{salida}{
+  basicstyle=\ttfamily\scriptsize, backgroundcolor=\color{fondo}, frame=single,
+  rulecolor=\color{fondo}, breaklines=true, columns=fullflexible, keepspaces=true,
+  showstringspaces=false, breakindent=2em
+}
+\lstset{style=c}
+% \codigo{archivo}{caption}: incluye un fragmento real de src/meeseeks.c
+\makeatletter\input{snippets/lines.tex}\makeatother
+\newcommand{\codigo}[2]{%
+  \edef\lin{\csname line@#1\endcsname}%
+  \lstinputlisting[style=c,caption={#2 (\texttt{src/meeseeks.c}, línea \lin)},
+  firstnumber=\lin]{snippets/#1.c}}
+\renewcommand{\lstlistingname}{Código}
+\renewcommand{\lstlistlistingname}{Índice de código}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small IC-6600 Sistemas Operativos}
+\rhead{\small Tarea 3: Box de Mr. Meeseeks}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+\setlength{\parskip}{0.45em}
+\setlength{\parindent}{0pt}
+
+\newcommand{\Tt}{T_{\text{total}}}
+\newcommand{\Ts}{T_{\text{sim}}}
+\newcommand{\Tr}{T_{\text{real}}}
+
+\begin{document}
+
+% ------------------------------------------------------------------ PORTADA
+\begin{titlepage}
+\centering
+{\large Instituto Tecnológico de Costa Rica\par}
+{\large Escuela de Ingeniería en Computadores\par}
+\vspace{0.6cm}
+{\large IC-6600 Sistemas Operativos\par}
+{\large II Semestre 2026\par}
+\vspace{3cm}
+{\Huge\bfseries Tarea 3\par}
+\vspace{0.4cm}
+{\LARGE Box de Mr.\ Meeseeks\par}
+\vspace{0.4cm}
+{\large Procesos con \texttt{fork()}, comunicación por \texttt{pipe()} y\\ sincronización con semáforos en Linux\par}
+\vspace{3.2cm}
+{\large Estudiante: Nicolás Florez Jiménez\par}
+{\large Carné: [completar]\par}
+\vspace{0.8cm}
+{\large Profesor: M.Sc.\ Esteban Arias-Méndez\par}
+\vfill
+{\large Cartago, octubre de 2026\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ------------------------------------------------------------------ INTRO
+\section{Introducción}
+
+En el episodio \emph{Meeseeks and Destroy} de la serie \emph{Rick and Morty}, una caja
+con un botón invoca a un Mr.\ Meeseeks: un ser que existe únicamente para cumplir una
+solicitud y que desaparece en cuanto lo logra. Cuando la tarea es difícil, el Meeseeks
+invoca a otros Meeseeks para que lo ayuden, y estos a otros más, hasta que la situación
+se sale de control. La analogía con un sistema operativo es directa: cada Meeseeks es un
+proceso, la caja es el proceso que los crea, y la proliferación sin control es una
+\emph{fork bomb}.
+
+Esta tarea implementa esa caja en C sobre Linux como un único programa. El proceso
+original (la \emph{Box}) recibe solicitudes del usuario y, para cada una, crea con
+\texttt{fork()} un Mr.\ Meeseeks raíz. Se atienden tres tipos de solicitud: (A)~tareas
+textuales simuladas cuya dificultad puede requerir un árbol de ayudantes, (B)~cálculos
+aritméticos o lógicos y (C)~la ejecución de programas externos. Los Meeseeks se
+comunican exclusivamente por \emph{pipes}; los contadores compartidos de niveles,
+instancias y estadísticas viven en memoria compartida y se protegen con semáforos POSIX
+administrados por el kernel. Un tiempo máximo configurable decreta el \emph{caos
+planetario} y termina todos los procesos de la solicitud.
+
+El documento describe la arquitectura del programa (sección~\ref{sec:arq}), cada caso
+de solicitud con el código que lo implementa (secciones~\ref{sec:a} a~\ref{sec:c}), el
+manejo del tiempo máximo y la forma de medir los tiempos (sección~\ref{sec:caos}), el uso
+de Git (sección~\ref{sec:git}) y corridas de ejemplo (sección~\ref{sec:corridas}). La
+sección~\ref{sec:exp} corresponde a la parte 0x02: siete experimentos que comparan el
+comportamiento de los casos y escenarios, con su análisis. Al final se presentan las
+conclusiones.
+
+% ------------------------------------------------------------------ ARQUITECTURA
+\section{Arquitectura general}\label{sec:arq}
+
+\subsection{Organización del programa}
+
+Todo el código está en un solo archivo, \texttt{src/meeseeks.c}, y todos los procesos
+ejecutan ese mismo código. El proceso que se ejecuta desde la terminal toma el papel de
+la Box (función \texttt{main}); cada proceso creado con \texttt{fork()} entra a la función
+\texttt{meeseeks\_run}, que es el punto de entrada de cualquier Mr.\ Meeseeks, sea la raíz
+($N=1$, $i=1$) o un ayudante. La figura~\ref{fig:arq} muestra la relación entre los
+procesos, los pipes y la memoria compartida.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  proc/.style={draw=azul, fill=azul!8, rounded corners=3pt, minimum width=2.1cm, minimum height=0.85cm, align=center, font=\small},
+  box/.style={draw=naranja, fill=naranja!10, rounded corners=3pt, minimum width=3.2cm, minimum height=1cm, align=center, font=\small\bfseries},
+  shm/.style={draw=aqua, fill=aqua!10, rounded corners=3pt, align=left, font=\scriptsize, inner sep=6pt},
+  down/.style={-{Latex[length=2mm]}, thick, azul},
+  up/.style={-{Latex[length=2mm]}, thick, naranja, dashed},
+  >=Latex]
+\node[box] (box) at (0,0) {Box (main)\\[-1pt]\normalfont\scriptsize lee solicitudes, informe final};
+\node[proc] (r) at (0,-2.1) {Meeseeks raíz\\\scriptsize $N=1,\ i=1$};
+\node[proc] (a1) at (-4.6,-4.4) {$N=2,\ i=1$};
+\node[proc] (a2) at (-2.3,-4.4) {$N=2,\ i=2$};
+\node[font=\large] (dots) at (0,-4.4) {$\cdots$};
+\node[proc] (a5) at (2.3,-4.4) {$N=2,\ i=5$};
+\node[proc] (b1) at (-5.6,-6.6) {$N=3,\ i=1$};
+\node[proc] (b2) at (-3.4,-6.6) {$N=3,\ i=2$};
+\node[font=\small, align=center, text=tinta] at (1.2,-6.6) {\dots\ el árbol crece mientras\\la dificultad no se diluya};
+\draw[down] (box.south) to[bend right=18] node[left, font=\scriptsize]{pipe down (M\_TASK)} (r.north);
+\draw[up] (r.north) to[bend right=18] node[right, font=\scriptsize]{pipe up (resultado)} (box.south);
+\foreach \k in {a1,a2,a5}{ \draw[down] (r) -- (\k); }
+\draw[up] (a2.north east) to[bend right=10] (r.south);
+\foreach \k in {b1,b2}{ \draw[down] (a1) -- (\k); }
+\node[shm] (sh) at (5.8,-1.3) {\textbf{Memoria compartida}\\(\texttt{mmap} \texttt{MAP\_SHARED})\\[2pt]
+\texttt{sem\_t mutex, slots, out}\\ contadores de niveles e\\ instancias, estadísticas,\\ datos del ganador};
+\draw[aqua, densely dotted, thick] (sh.west) -- (box.east);
+\draw[aqua, densely dotted, thick] (sh.south west) -- (r.east);
+\draw[aqua, densely dotted, thick] (sh.south) -- (a5.north east);
+\node[font=\scriptsize, align=left, anchor=north west] at (3.6,-5.4) {%
+\textcolor{azul}{\rule[0.5ex]{0.6cm}{1pt}} pipe privado padre $\to$ hijo\\
+\textcolor{naranja}{\rule[0.5ex]{0.15cm}{1pt}\,\rule[0.5ex]{0.15cm}{1pt}\,\rule[0.5ex]{0.15cm}{1pt}} pipe compartido hijos $\to$ padre\\
+\textcolor{aqua}{$\cdot\cdot\cdot\cdot$} acceso a memoria compartida};
+\end{tikzpicture}
+\caption{Procesos, pipes y memoria compartida. Cada flecha sólida es un pipe distinto; los hijos de un mismo padre comparten un único pipe de subida.}
+\label{fig:arq}
+\end{figure}
+
+\subsection{Estructuras de datos}
+
+Los mensajes entre procesos tienen tamaño fijo. La estructura \texttt{msg\_t} ocupa 320
+bytes, menos que \texttt{PIPE\_BUF} (4096 bytes en Linux), por lo que POSIX garantiza que
+cada \texttt{write()} sobre el pipe es atómico: aunque cinco hermanos escriban al mismo
+tiempo en el pipe de subida, los mensajes nunca se entremezclan. La identidad de un
+Meeseeks es la tupla $(pid, ppid, N, i)$ que pide el enunciado.
+
+\codigo{msg_who}{Identidad de un Meeseeks y formato de los mensajes}
+
+La memoria compartida contiene solo contadores y estadísticas; ningún mensaje viaja por
+ella, como exige el enunciado. Se crea una vez con \texttt{mmap(MAP\_SHARED|MAP\_ANONYMOUS)}
+antes de cualquier \texttt{fork()}, de modo que todos los procesos descendientes ven la
+misma página física.
+
+\codigo{shared}{Región compartida entre todos los procesos}
+
+\subsection{Comunicación por pipes}
+
+Cada vez que un Meeseeks crea a un ayudante abre un pipe nuevo (\emph{down}) que solo
+ellos dos conocen: por él el padre le envía en privado la solicitud (\texttt{M\_TASK}) y,
+si hace falta, la orden de desaparecer (\texttt{M\_STOP}). En sentido contrario, todos los
+hijos de un mismo padre escriben en un único pipe de subida (\emph{up}) que el padre lee con
+\texttt{poll()}. Inmediatamente después del \texttt{fork()} el hijo cierra todos los
+descriptores que no le pertenecen (los del abuelo, el extremo de lectura del pipe de
+subida y los pipes privados de sus hermanos), lo que evita fugas de descriptores al crecer
+el árbol. Los mensajes posibles son:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Mensaje & Dirección & Significado \\
+\midrule
+\texttt{M\_TASK}   & padre $\to$ hijo & solicitud a atender, con la dificultad ya diluida \\
+\texttt{M\_STOP}   & padre $\to$ hijo & la tarea ya se cumplió: despedirse y desaparecer \\
+\texttt{M\_SOLVED} & hijo $\to$ padre & la tarea fue resuelta; lleva la tupla del ganador \\
+\texttt{M\_FAILED} & hijo $\to$ padre & la rama no pudo (se activó la contingencia) \\
+\texttt{M\_RESULT} & Meeseeks $\to$ Box & resultado de un cálculo o de un programa externo \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Semáforos}
+
+Se usan tres semáforos POSIX sin nombre (\texttt{sem\_t}) inicializados con
+\texttt{pshared = 1}, lo que los hace válidos entre procesos porque residen en la memoria
+compartida. El kernel administra la espera mediante \emph{futex}: un proceso bloqueado en
+\texttt{sem\_wait} no consume CPU.
+
+\begin{itemize}[leftmargin=1.5em]
+\item \texttt{mutex} (valor inicial 1): exclusión mutua sobre todos los contadores. Cada
+  Meeseeks lo toma al registrarse (\texttt{register\_self}), al desaparecer
+  (\texttt{vanish}), al reservar la creación de un ayudante y al reclamar la victoria.
+\item \texttt{slots} (valor inicial \texttt{-a}, por defecto 128): semáforo contador que
+  limita cuántos Meeseeks pueden estar \emph{trabajando} a la vez. Es la primera capa del
+  plan de contingencia (sección~\ref{sec:contingencia}).
+\item \texttt{out} (valor inicial 1): serializa la impresión. Cada línea se arma completa
+  en memoria y se escribe con un solo \texttt{write()}, por lo que nunca se mezclan dos
+  mensajes en pantalla. Se usa \texttt{sem\_timedwait} con un límite de 200~ms para que un
+  proceso terminado abruptamente mientras imprimía no bloquee a los demás.
+\end{itemize}
+
+\codigo{register}{Registro de un Meeseeks en los contadores compartidos}
+\codigo{vanish}{Desaparición: actualiza estadísticas y libera su \emph{slot}}
+
+\subsection{Ciclo de vida de un Mr.\ Meeseeks}
+
+La figura~\ref{fig:estados} resume los estados por los que pasa un Meeseeks que atiende
+una solicitud de texto. Lo primero que hace al nacer es saludar con el mensaje exigido,
+\texttt{Hi, I'm Mr. Meeseeks! Look at Meeeee. (pid, ppid, N, i)}; después lee la solicitud
+de su pipe privado. Todos los mensajes que imprime un Meeseeks llevan el prefijo
+\texttt{[pid | ppid | N i]}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  st/.style={draw=azul, fill=azul!8, rounded corners=8pt, minimum height=0.8cm, align=center, font=\small, inner xsep=6pt},
+  fin/.style={draw=naranja, fill=naranja!10, rounded corners=8pt, minimum height=0.8cm, align=center, font=\small},
+  dec/.style={draw=aqua, fill=aqua!10, diamond, aspect=2.2, align=center, font=\scriptsize, inner sep=1pt},
+  ar/.style={-{Latex[length=2mm]}, thick, tinta}, lab/.style={font=\scriptsize, text=tinta}]
+\node[st] (n) {Nace y saluda\\\scriptsize\texttt{(pid, ppid, N, i)}};
+\node[st, right=0.9cm of n] (r) {Lee \texttt{M\_TASK}\\\scriptsize por su pipe};
+\node[st, right=0.9cm of r] (w) {Trabaja $t$ segundos\\\scriptsize\texttt{poll()} sobre su pipe};
+\node[dec, below=0.9cm of w] (d) {¿$d>85$ o\\Tiro Meeseeks?};
+\node[fin, below left=0.7cm and 0.4cm of d] (s) {Reclama victoria,\\avisa al padre, desaparece};
+\node[st, below right=0.7cm and 0.2cm of d] (h) {Pide ayuda: 5 si $d\le45$,\\2 si $45<d\le85$};
+\node[st, below=0.8cm of h] (e) {Espera a sus hijos\\\scriptsize\texttt{poll()} pipe padre + pipe hijos};
+\node[fin, below=0.8cm of s] (x) {Detiene a sus hijos,\\se despide y desaparece};
+\draw[ar] (n) -- (r);
+\draw[ar] (r) -- (w);
+\draw[ar] (w) -- (d);
+\draw[ar] (d) -| node[lab, above, pos=0.25]{sí} (s);
+\draw[ar] (d) -| node[lab, above, pos=0.25]{no} (h);
+\draw[ar] (h) -- (e);
+\draw[ar] (e) -- node[lab, above, align=center]{hijo resolvió (\texttt{M\_SOLVED}),\\ \texttt{M\_STOP} o todos fallaron} (x);
+\draw[ar] (w.north) to[out=60,in=120,looseness=4] node[lab, above]{\texttt{M\_STOP}: desaparece} (w.north);
+\end{tikzpicture}
+\caption{Estados de un Mr.\ Meeseeks que atiende una solicitud de texto.}
+\label{fig:estados}
+\end{figure}
+
+Mientras simula su trabajo, el Meeseeks no duerme con \texttt{sleep()}: espera con
+\texttt{poll()} sobre su pipe privado, de manera que si otro Meeseeks resuelve la tarea
+y le llega \texttt{M\_STOP}, se despide y desaparece de inmediato en lugar de terminar su
+espera.
+
+\codigo{work}{Trabajo simulado que sigue escuchando el pipe}
+
+% ------------------------------------------------------------------ CASO A
+\section{Caso A: solicitudes de texto}\label{sec:a}
+
+\subsection{Dificultad de la solicitud}
+
+La dificultad es un valor $d\in[0,100]$, donde 100 es muy fácil y 0 imposible. Cuando el
+usuario escribe una solicitud de texto, la Box le pregunta la dificultad (caso~1). Si el
+usuario presiona Enter, la Box envía $d=-1$ y el propio Meeseeks raíz la estima a su
+suerte (caso~2) con una distribución Beta$(4,2)$ escalada a $[0,100]$. Se eligió esta
+distribución porque su media es $2/3$ ($d\approx 66.7$): la mayoría de las solicitudes
+cotidianas son de dificultad media o fácil, pero la cola izquierda deja una probabilidad
+pequeña de tareas muy difíciles, como en la serie. Se genera sin bibliotecas externas con
+el estadístico de orden: el cuarto menor de cinco números uniformes sigue una Beta$(4,2)$.
+
+\codigo{beta}{Dificultad a la suerte del Meeseeks: Beta(4,2)}
+
+\subsection{Duración de la simulación y desesperación}
+
+Cada Meeseeks trabaja un tiempo uniforme entre 0.5 y 5~s, o el valor base que indique el
+usuario. Ese tiempo se multiplica por un factor de \emph{desesperación} que crece con el
+nivel: $1+0.1\,(N-1)$ para tareas posibles y $1+0.5\,(N-1)$ para tareas imposibles
+($d=0$). Así, como pide el enunciado, ante una tarea imposible cada nueva generación de
+Meeseeks tarda notablemente más que la anterior.
+
+\subsection{Modelo de resolución: Tiro Meeseeks y Ley de Dilución}
+
+Después de trabajar, el Meeseeks decide si cumplió la solicitud con las reglas del
+enunciado más dos ideas propias:
+
+\begin{enumerate}[leftmargin=1.5em]
+\item \textbf{Tareas fáciles} ($85<d\le100$): las resuelve un solo Meeseeks.
+\item \textbf{Tiro Meeseeks} ($0<d\le85$): antes de pedir ayuda, el Meeseeks intenta la
+  tarea por su cuenta y lo logra con probabilidad $p(d)=(d/100)^3$. La forma cúbica castiga
+  mucho la dificultad: con $d=80$ tiene 51\,\% de éxito, con $d=50$ solo 12.5\,\%, con
+  $d=20$ menos de 1\,\%.
+\item \textbf{Pedir ayuda}: si falla el tiro, invoca 5 ayudantes cuando $d\le45$ (nivel
+  $N+1$, instancias $i=1,\dots,5$) o 2 ayudantes cuando $45<d\le85$ ($i=1,2$).
+\item \textbf{Ley de Dilución Meeseeks}: cada ayudante recibe una versión más sencilla de
+  la tarea, como si se repartiera entre ellos. La nueva dificultad sigue un crecimiento
+  logístico con ruido multiplicativo:
+  \[
+    d' = \min\!\Big(100,\ \big[d + r\,d\,(1-\tfrac{d}{100})\big]\,e^{0.08Z}\Big),
+    \qquad r = g\sqrt{k},\quad Z\sim\mathcal{N}(0,1),
+  \]
+  donde $k$ es la cantidad de ayudantes y $g$ la ganancia (por defecto $0.5$). Con más
+  ayudantes la tarea se simplifica más rápido ($r\approx1.12$ con 5 ayudantes y
+  $r\approx0.71$ con 2). Es una forma de \emph{añejamiento} (\emph{aging}): igual que en
+  planificación la prioridad de un proceso crece mientras espera, aquí la facilidad de la
+  tarea crece con cada generación hasta superar 85.
+\end{enumerate}
+
+La propiedad clave de la ley es que $d=0$ es un punto fijo: como el término de crecimiento
+y el ruido son proporcionales a $d$, una tarea imposible sigue siendo imposible sin
+importar cuántos Meeseeks se invoquen, que es exactamente lo que pide el enunciado. En
+cambio, cualquier $d>0$ por pequeño que sea termina diluyéndose: cerca de 0 la dificultad
+se multiplica por $1+r\approx2.1$ en cada generación, de modo que el número de niveles
+necesarios crece como $\log(1/d)$ y el número de Meeseeks crece en forma exponencial con
+esos niveles. La sección~\ref{sec:exp} mide este comportamiento.
+
+\codigo{dilute}{Ley de Dilución Meeseeks}
+\codigo{selfp}{Probabilidad del Tiro Meeseeks}
+
+\subsection{Creación de ayudantes}
+
+La función \texttt{spawn\_helper} pide un \emph{slot} al semáforo contador, reserva la
+creación en el contador compartido (y verifica el tope total), crea el pipe privado, hace
+\texttt{fork()} y le envía al hijo la solicitud con la dificultad diluida. El hijo cierra
+los descriptores ajenos y entra a \texttt{meeseeks\_run} con $N+1$ y su número de
+instancia.
+
+\codigo{spawn}{Creación de un ayudante}
+
+\subsection{Propagación de la solución y despedidas}\label{sec:propag}
+
+Cuando varios Meeseeks trabajan en paralelo es posible que dos o más logren la tarea casi
+al mismo tiempo. Para que haya un único ganador, el que tiene éxito debe reclamar la
+victoria dentro de una sección crítica: el primero que toma el \texttt{mutex} y encuentra
+\texttt{solved = 0} gana; los demás reportan que alguien se les adelantó y esperan la
+orden de desaparecer.
+
+\codigo{claim}{Victoria exclusiva}
+
+El ganador avisa a su padre por el pipe de subida (\texttt{M\_SOLVED} con su tupla). El
+padre envía \texttt{M\_STOP} por el pipe privado de cada uno de sus hijos (los hermanos del
+ganador), espera con \texttt{waitpid} a que se despidan, se despide él mismo y reenvía el
+mensaje a su propio padre. La orden de desaparecer se propaga recursivamente hacia abajo
+por las demás ramas, y la noticia del éxito sube hasta la raíz, que finalmente informa al
+usuario qué Meeseeks resolvió la solicitud. Luego el control vuelve a la Box.
+
+\codigo{stopall}{Detener a todos los hijos y esperarlos}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  ll/.style={draw=azul, fill=azul!8, rounded corners=2pt, minimum width=1.9cm, minimum height=0.6cm, font=\scriptsize, align=center},
+  m/.style={-{Latex[length=1.8mm]}, thick}, lab/.style={font=\scriptsize, fill=white, inner sep=1pt}]
+\foreach \n/\t/\x in {box/Box/0, r/Raíz $N{=}1$/2.6, p/Padre $N{=}2$/5.2, g/Ganador $N{=}3$/7.8, h/Hermano $N{=}3$/10.4}{
+  \node[ll] (\n) at (\x,0) {\t};
+  \draw[tinta, densely dashed] (\n.south) -- ++(0,-6.2);
+}
+\draw[m, naranja] (7.8,-0.9) -- node[lab]{reclama \texttt{mutex}: gana} (7.8,-0.9);
+\draw[m, naranja] (7.8,-1.4) -- node[lab]{\texttt{M\_SOLVED}} (5.2,-1.4);
+\draw[m, azul] (5.2,-2.1) -- node[lab]{\texttt{M\_STOP}} (10.4,-2.1);
+\draw[m, tinta] (10.4,-2.7) -- node[lab]{se despide, \texttt{exit}} (5.2,-2.7);
+\draw[m, naranja] (5.2,-3.4) -- node[lab]{\texttt{M\_SOLVED}} (2.6,-3.4);
+\draw[m, azul] (2.6,-4.1) -- node[lab]{\texttt{M\_STOP} a las otras ramas} (0.2,-4.1);
+\node[font=\scriptsize, text=tinta, align=center] at (1.3,-4.6) {(recursivo hacia abajo)};
+\draw[m, naranja] (2.6,-5.4) -- node[lab]{\texttt{M\_SOLVED} + informe} (0,-5.4);
+\end{tikzpicture}
+\caption{Secuencia de mensajes cuando un Meeseeks de nivel 3 resuelve la tarea.}
+\label{fig:secuencia}
+\end{figure}
+
+\subsection{Plan de contingencia contra el colapso}\label{sec:contingencia}
+
+Una solicitud imposible ($d=0$) siempre pide 5 ayudantes por Meeseeks: sin control serían
+$5^{N-1}$ procesos en el nivel $N$, una \emph{fork bomb}. El programa aplica cuatro capas,
+documentadas también al ejecutarlo:
+
+\begin{enumerate}[leftmargin=1.5em]
+\item \textbf{Semáforo de \emph{slots}} (\texttt{-a}, 128 por defecto): un Meeseeks solo
+  puede trabajar si tomó un \emph{slot}; para crear un ayudante hay que obtener uno con
+  \texttt{sem\_trywait}, y si no hay, el padre espera con \texttt{poll()} (sin dejar de
+  atender su pipe) y reintenta. Esto limita la carga de CPU y el ritmo de creación.
+\item \textbf{Tope total por solicitud} (\texttt{-m}, 3000 por defecto): el contador
+  compartido \texttt{created} se incrementa \emph{antes} del \texttt{fork()} dentro de la
+  sección crítica. Si alcanzó el tope, no se crean más Meeseeks; las hojas que ya no pueden
+  pedir ayuda reportan \texttt{M\_FAILED} y la falla se propaga hasta la raíz, que informa
+  que la solicitud no pudo completarse. El número total de procesos vivos queda acotado por
+  este tope, muy por debajo de \texttt{pid\_max} (32\,768 en el equipo de pruebas).
+\item \textbf{Fallas de \texttt{fork()}}: si el sistema niega un proceso
+  (\texttt{EAGAIN}), se deshace la reserva y se trata igual que el tope.
+\item \textbf{Caos planetario} (\texttt{-T}, 300~s por defecto): la última línea de
+  defensa, descrita en la sección~\ref{sec:caos}.
+\end{enumerate}
+
+\paragraph{Un interbloqueo encontrado durante el desarrollo.} En la primera versión, cada
+Meeseeks conservaba su \emph{slot} durante toda su vida, incluso mientras esperaba a sus
+ayudantes. Con una tarea imposible y un tope de 400, el programa se quedó congelado: los
+128 procesos vivos eran padres esperando un \emph{slot} para crear a su siguiente ayudante,
+y ninguno lo liberaba porque todos esperaban. Es un caso de libro de las cuatro condiciones
+de Coffman (exclusión mutua, retención y espera, no expropiación y espera circular). La
+corrección fue romper la retención y espera: el \emph{slot} representa a un Meeseeks
+\emph{trabajando}; en el momento en que un Meeseeks decide pedir ayuda y pasa a esperar,
+libera su \emph{slot} (\texttt{HOLDS\_SLOT = 0}). Desde entonces siempre hay \emph{slots}
+para las hojas y la solicitud termina por el tope o por el tiempo máximo.
+
+\subsection{Código completo del caso A}
+
+\codigo{text}{Atención de una solicitud de texto}
+
+% ------------------------------------------------------------------ CASO B
+\section{Caso B: cálculos aritméticos y lógicos}\label{sec:b}
+
+Una solicitud que empieza con \texttt{calc} (o con \texttt{=}) la atiende un solo
+Meeseeks, que evalúa la expresión con un analizador recursivo descendente escrito para esta
+tarea. No hay simulación de espera: el tiempo medido es el de crear el proceso, pasarle la
+expresión por el pipe, evaluarla y devolver el resultado. La gramática, de menor a mayor
+precedencia, es:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Nivel & Producción \\
+\midrule
+\texttt{or}      & \texttt{and ( "||" and )*} \\
+\texttt{and}     & \texttt{eq ( "\&\&" eq )*} \\
+\texttt{eq}      & \texttt{rel ( ("==" | "!=") rel )*} \\
+\texttt{rel}     & \texttt{add ( ("<" | "<=" | ">" | ">=") add )*} \\
+\texttt{add}     & \texttt{mul ( ("+" | "-") mul )*} \\
+\texttt{mul}     & \texttt{unary ( ("*" | "/" | "\%") unary )*} \\
+\texttt{unary}   & \texttt{("-" | "+" | "!") unary | power} \\
+\texttt{power}   & \texttt{primary ( "\^{}" unary )?} \\
+\texttt{primary} & \texttt{número | "(" or ")" | true | false | sqrt(...) | abs(...)} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Consideraciones especiales:
+\begin{itemize}[leftmargin=1.5em]
+\item Los números son de punto flotante (\texttt{double}); un resultado entero se imprime
+  sin decimales.
+\item La potencia es asociativa a la derecha ($2\verb|^|3\verb|^|2=512$) y el menos unario
+  tiene menor precedencia que ella ($-2\verb|^|2=-4$), como en matemática.
+\item Los operadores relacionales y lógicos devuelven 1 o 0, y cualquier valor distinto de
+  0 es verdadero, igual que en C.
+\item Se reportan como error, con la posición del problema: símbolos inesperados,
+  paréntesis sin cerrar, texto sobrante, división o módulo entre cero, raíz de negativos y
+  resultados no finitos. En ese caso la solicitud se registra como \emph{no completada}.
+\end{itemize}
+
+\codigo{pmul}{Nivel multiplicativo del analizador (con detección de división entre cero)}
+\codigo{evaluate}{Punto de entrada del evaluador}
+
+% ------------------------------------------------------------------ CASO C
+\section{Caso C: ejecución de programas externos}\label{sec:c}
+
+Una solicitud que empieza con \texttt{run} (o con \texttt{!}) también la atiende un solo
+Meeseeks. Este crea a su vez un proceso nieto con \texttt{fork()} que reemplaza su imagen
+con \texttt{execl("/bin/sh", "sh", "-c", comando)}. Usar el intérprete permite pasar
+argumentos, tuberías y redirecciones (\texttt{run ls /usr/bin > /dev/null}). La entrada
+estándar del programa se redirige a \texttt{/dev/null} para que no consuma las solicitudes
+destinadas a la Box. El Meeseeks mide el tiempo y espera con \texttt{waitpid()}; la tarea
+se considera completada solo si el programa terminó normalmente
+(\texttt{WIFEXITED}) con código 0. Cualquier otro código (1, 3, 126, 127, \dots) o una
+terminación por señal se reporta como no completada, indicando la causa.
+
+\codigo{run}{Ejecución de un programa externo}
+
+% ------------------------------------------------------------------ CAOS Y TIEMPOS
+\section{Tiempo máximo, caos planetario y medición de tiempos}\label{sec:caos}
+
+\subsection{Caos planetario}
+
+La Box espera el resultado de cada solicitud con \texttt{poll()} sobre el pipe de subida
+de la raíz, con un tiempo límite igual al tiempo que falta para el máximo configurado
+(\texttt{-T}, 300~s por defecto, es decir 5 minutos). Si vence, se decreta el caos
+planetario: la Box envía \texttt{SIGTERM} y luego \texttt{SIGKILL} a todo el grupo de
+procesos de la solicitud. Esto es posible porque la raíz crea su propio grupo con
+\texttt{setpgid(0,0)} y todos sus descendientes lo heredan, de modo que un solo
+\texttt{kill(-pgid, ...)} alcanza a todo el árbol, incluidos los programas externos. Además,
+la Box se declara \emph{subreaper} (\texttt{prctl(PR\_SET\_CHILD\_SUBREAPER)}): los procesos
+cuyo padre murió en el caos quedan como hijos de la Box en lugar de \texttt{init}, y la Box
+los recoge con \texttt{waitpid(-1, \dots)} para no dejar zombis. Después imprime el informe
+y termina, como pide el enunciado. Con \texttt{-k} puede seguir aceptando solicitudes, y
+con \texttt{-x} (modo experimento) anuncia el caos pero deja que los Meeseeks continúen,
+para medir cuánto tiempo adicional necesitan.
+
+\codigo{runtask}{La Box atendiendo una solicitud}
+
+\subsection{Qué se mide}\label{sec:medidas}
+
+El enunciado pide tomar los tiempos de ejecución reales sin contar las esperas aleatorias
+de la simulación. Como los Meeseeks trabajan en paralelo, restar la suma de todas las
+esperas no tiene sentido (puede superar el tiempo total). Lo correcto es restar la espera
+del \emph{camino crítico}: cada mensaje \texttt{M\_TASK} lleva la espera simulada acumulada
+desde la raíz (\texttt{path\_sleep}) y el ganador la devuelve en \texttt{M\_SOLVED}. Para
+cada solicitud se registran:
+
+\begin{itemize}[leftmargin=1.5em]
+\item $\Tt$: tiempo de pared desde que la Box crea la raíz hasta que recibe el resultado,
+  medido con \texttt{clock\_gettime(CLOCK\_MONOTONIC)}.
+\item $\Ts$: espera simulada a lo largo del camino raíz $\to$ ganador (o del camino más
+  largo si nadie ganó).
+\item $\Tr=\Tt-\Ts$: el tiempo real que consumió el sistema operativo y el programa
+  (crear procesos, copiar páginas, pasar mensajes, planificar, sincronizar). Para los
+  casos B y C, $\Ts=0$.
+\item CPU: tiempo de usuario más sistema de todos los descendientes, con
+  \texttt{getrusage(RUSAGE\_CHILDREN)}.
+\item Meeseeks creados, nivel máximo y pico de procesos vivos simultáneos.
+\end{itemize}
+
+Con la opción \texttt{-o} la Box agrega una fila CSV por solicitud; los experimentos de la
+sección~\ref{sec:exp} se construyen a partir de esos archivos.
+
+% ------------------------------------------------------------------ GIT
+\section{Uso de Git}\label{sec:git}
+
+El desarrollo se hizo en un repositorio Git desde el primer archivo. Cada etapa quedó en
+su propio commit, incluida la corrección del interbloqueo descrita en la
+sección~\ref{sec:contingencia}. El historial es:
+
+\begin{lstlisting}[style=salida]
+\input{gitlog.txt}
+\end{lstlisting}
+
+% ------------------------------------------------------------------ COMPILAR
+\section{Compilación y uso}
+
+\begin{lstlisting}[style=salida]
+make                      # gcc -Wall -Wextra -O2 -std=gnu11 ... -pthread -lm
+./meeseeks                # configuracion por defecto: T = 300 s, 3000 Meeseeks, 128 slots
+./meeseeks -T 60 -q -o datos.csv
+\end{lstlisting}
+
+\begin{center}
+\begin{tabular}{lp{10cm}l}
+\toprule
+Opción & Significado & Defecto \\
+\midrule
+\texttt{-T} & tiempo máximo por solicitud antes del caos (0 = sin límite) & 300 s \\
+\texttt{-m} & máximo de Meeseeks por solicitud (contingencia) & 3000 \\
+\texttt{-a} & Meeseeks trabajando a la vez (semáforo contador) & 128 \\
+\texttt{-g} & ganancia de dilución & 0.5 \\
+\texttt{-s} & semilla aleatoria & tiempo \\
+\texttt{-q} & silencioso: solo mensajes de la Box & \\
+\texttt{-x} & modo experimento: no terminar al vencer \texttt{-T} & \\
+\texttt{-k} & seguir aceptando solicitudes después de un caos & \\
+\texttt{-o} & agregar una fila CSV por solicitud & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Dentro de la Box, una línea de texto libre es una solicitud del caso A (la Box pregunta
+dificultad y duración; Enter deja ambas al azar), \texttt{calc <expresión>} es del caso B,
+\texttt{run <comando>} del caso C, y \texttt{adios} cierra la Box con el informe final.
+
+\input{resultados.tex}
+
+\end{document}

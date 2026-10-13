@@ -1,3 +1,8 @@
 meeseeks
 *.o
 runs/tmp_*
+docs/*.aux
+docs/*.log
+docs/*.out
+docs/*.toc
+docs/*.lol

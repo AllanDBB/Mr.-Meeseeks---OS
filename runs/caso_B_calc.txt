@@ -1,0 +1,47 @@
++--------------------------------------------------------------+
+|             BOX DE MR. MEESEEKS   (IC-6600, ITCR)            |
+|  Escriba una solicitud, 'calc <expr>', 'run <comando>'       |
+|  o despidase con 'adios'.                                    |
++--------------------------------------------------------------+
+Configuracion: tiempo maximo 300 s | tope 3000 Meeseeks | 128 trabajando a la vez | ganancia 0.50
+
+Box> calc (2+3)*4^2/8 - 7 % 3
+[Box    pid 22039 | ppid 22029] Boton presionado: Mr. Meeseeks raiz (pid 22040) atendera la solicitud #1 [calc] "(2+3)*4^2/8 - 7 % 3"
+[pid 22040 | ppid 22039 | N=1 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22040, 22039, 1, 1)
+[pid 22040 | ppid 22039 | N=1 i=1] Recibi por mi pipe un calculo: "(2+3)*4^2/8 - 7 % 3". Ooooh, eso es facil!
+[pid 22040 | ppid 22039 | N=1 i=1] Resultado: (2+3)*4^2/8 - 7 % 3 = 9. Calculo completado! Gracias por dejarme servirle. Adios! *puff*
+[Box    pid 22039 | ppid 22029] Solicitud #1 COMPLETADA. Tiempo total 0.0004 s | espera simulada 0.0000 s | tiempo real 0.0004 s | CPU 0.0002 s
+[Box    pid 22039 | ppid 22029]    Mr. Meeseeks creados: 1 | nivel maximo: 1 | pico simultaneo: 1
+[Box    pid 22039 | ppid 22029]    Resultado: (2+3)*4^2/8 - 7 % 3 = 9
+
+Box> calc sqrt(2)*sqrt(2) == 2 || 1 > 0 && !false
+[Box    pid 22039 | ppid 22029] Boton presionado: Mr. Meeseeks raiz (pid 22041) atendera la solicitud #2 [calc] "sqrt(2)*sqrt(2) == 2 || 1 > 0 && !false"
+[pid 22041 | ppid 22039 | N=1 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22041, 22039, 1, 1)
+[pid 22041 | ppid 22039 | N=1 i=1] Recibi por mi pipe un calculo: "sqrt(2)*sqrt(2) == 2 || 1 > 0 && !false". Ooooh, eso es facil!
+[pid 22041 | ppid 22039 | N=1 i=1] Resultado: sqrt(2)*sqrt(2) == 2 || 1 > 0 && !false = 1. Calculo completado! Gracias por dejarme servirle. Adios! *puff*
+[Box    pid 22039 | ppid 22029] Solicitud #2 COMPLETADA. Tiempo total 0.0003 s | espera simulada 0.0000 s | tiempo real 0.0003 s | CPU 0.0002 s
+[Box    pid 22039 | ppid 22029]    Mr. Meeseeks creados: 1 | nivel maximo: 1 | pico simultaneo: 1
+[Box    pid 22039 | ppid 22029]    Resultado: sqrt(2)*sqrt(2) == 2 || 1 > 0 && !false = 1
+
+Box> calc 10 / (5 - 5)
+[Box    pid 22039 | ppid 22029] Boton presionado: Mr. Meeseeks raiz (pid 22042) atendera la solicitud #3 [calc] "10 / (5 - 5)"
+[pid 22042 | ppid 22039 | N=1 i=1] Hi, I'm Mr. Meeseeks! Look at Meeeee. (22042, 22039, 1, 1)
+[pid 22042 | ppid 22039 | N=1 i=1] Recibi por mi pipe un calculo: "10 / (5 - 5)". Ooooh, eso es facil!
+[pid 22042 | ppid 22039 | N=1 i=1] No pude evaluar "10 / (5 - 5)": division entre cero (posicion 13). La existencia es dolor! *puff*
+[Box    pid 22039 | ppid 22029] Solicitud #3 NO COMPLETADA. Tiempo total 0.0002 s | espera simulada 0.0000 s | tiempo real 0.0002 s | CPU 0.0002 s
+[Box    pid 22039 | ppid 22029]    Mr. Meeseeks creados: 1 | nivel maximo: 1 | pico simultaneo: 1
+[Box    pid 22039 | ppid 22029]    Resultado: error: division entre cero (posicion 13)
+
+Box> adios
+[Box    pid 22039 | ppid 22029] El usuario se despide. Cerrando la Box...
+
+==================================== INFORME DE LA BOX ====================================
+#   Tipo  Solicitud                     Dific Estado          T.total    T.real      CPU Meeseeks  Niv  Resolvio (pid,ppid,N,i)
+1   calc  (2+3)*4^2/8 - 7 % 3               - completada      0.0004s   0.0004s  0.0002s        1    1  (22040, 22039, 1, 1)
+2   calc  sqrt(2)*sqrt(2) == 2 || 1 >       - completada      0.0003s   0.0003s  0.0002s        1    1  (22041, 22039, 1, 1)
+3   calc  10 / (5 - 5)                      - no completada   0.0002s   0.0002s  0.0002s        1    1  -
+-------------------------------------------------------------------------------------------
+Solicitudes: 3 | completadas: 2 | no completadas: 1 | caos: 0   (* dificultad a la suerte)
+T.real = tiempo total menos la espera simulada del camino critico.
+===========================================================================================
+[Box    pid 22039 | ppid 22029] Gracias por usar la Box de Mr. Meeseeks. Hasta luego!

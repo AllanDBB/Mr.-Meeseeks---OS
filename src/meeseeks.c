@@ -1082,7 +1082,7 @@ static int run_task(int kind, const char *text, double d, double dur)
     close(down[1]); close(up[0]);
 
     const char *est = R->status == 1 ? "COMPLETADA" : R->status == 2 ? "CAOS PLANETARIO" : "NO COMPLETADA";
-    say("Solicitud #%d %s. Tiempo total %.3f s | espera simulada %.3f s | tiempo real %.3f s | CPU %.3f s",
+    say("Solicitud #%d %s. Tiempo total %.4f s | espera simulada %.4f s | tiempo real %.4f s | CPU %.4f s",
         R->id, est, R->wall, R->sim, R->real, R->cpu);
     say("   Mr. Meeseeks creados: %ld | nivel maximo: %d | pico simultaneo: %ld%s",
         R->created, R->max_level, R->max_alive, R->capped ? " | se activo el tope de contingencia" : "");
@@ -1110,7 +1110,7 @@ static void final_report(void)
         if (R->status == 1)
             snprintf(who, sizeof who, "(%d, %d, %d, %d)", R->solver.pid, R->solver.ppid, R->solver.N, R->solver.i);
         const char *est = R->status == 1 ? "completada" : R->status == 2 ? "caos" : "no completada";
-        printf("%-3d %-5s %-28s %6s %-13s %8.3fs %8.3fs %7.3fs %8ld %4d  %s\n",
+        printf("%-3d %-5s %-28s %6s %-13s %8.4fs %8.4fs %7.4fs %8ld %4d  %s\n",
                R->id, kind_name(R->kind), t, dif, est, R->wall, R->real, R->cpu, R->created, R->max_level, who);
         if (R->status == 1) ok++; else if (R->status == 2) ch++; else no++;
     }
@@ -1154,7 +1154,7 @@ static void usage(const char *p)
         "Uso: %s [-T seg] [-m max_total] [-a max_vivos] [-g ganancia] [-s semilla] [-q] [-x] [-k] [-o archivo.csv]\n"
         "  -T  tiempo maximo por solicitud antes del caos planetario (0 = sin limite, defecto 300)\n"
         "  -m  maximo de Mr. Meeseeks por solicitud (defecto 3000)\n"
-        "  -a  maximo de Mr. Meeseeks vivos simultaneamente (defecto 128)\n"
+        "  -a  maximo de Mr. Meeseeks trabajando simultaneamente (defecto 128)\n"
         "  -g  ganancia de dilucion de la dificultad (defecto 0.5)\n"
         "  -s  semilla aleatoria\n"
         "  -q  silencioso: solo mensajes de la Box\n"
@@ -1211,7 +1211,7 @@ int main(int argc, char **argv)
     printf("|  Escriba una solicitud, 'calc <expr>', 'run <comando>'       |\n");
     printf("|  o despidase con 'adios'.                                    |\n");
     printf("+--------------------------------------------------------------+\n");
-    printf("Configuracion: tiempo maximo %.0f s%s | tope %ld Meeseeks | %d vivos a la vez | ganancia %.2f\n",
+    printf("Configuracion: tiempo maximo %.0f s%s | tope %ld Meeseeks | %d trabajando a la vez | ganancia %.2f\n",
            CFG.max_time, CFG.max_time <= 0 ? " (sin limite)" : "", CFG.max_total, CFG.max_alive, CFG.gain);
 
     char line[MAX_TEXT], aux[64];
