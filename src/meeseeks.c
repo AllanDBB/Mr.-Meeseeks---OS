@@ -4,10 +4,9 @@
  *  Proyecto    : Tarea 3 - Box de Mr. Meeseeks
  *  Curso       : IC-6600 Sistemas Operativos, II Semestre 2026
  *  Institucion : Instituto Tecnologico de Costa Rica, sede Cartago
- *  Escuela     : Ingenieria en Computadores
  *  Profesor    : M.Sc. Esteban Arias-Mendez
- *  Estudiante  : Nicolas Florez Jimenez
- *  Carne       : [completar]
+ *  Estudiante  : Allan David Bolanos Barrientos
+ *  Carne       : 2024145458
  *  Fecha       : Octubre 2026
  *  Lenguaje    : C (gnu11) sobre Linux
  *  Compilacion : gcc -Wall -Wextra -O2 -std=gnu11 -o meeseeks meeseeks.c -pthread -lm
