@@ -22,8 +22,8 @@ make            # genera ./meeseeks
 | Opción | Significado | Defecto |
 |---|---|---|
 | `-T` | Tiempo máximo por solicitud antes del caos planetario (0 = sin límite) | 300 s |
-| `-m` | Máximo de Mr. Meeseeks por solicitud (plan de contingencia) | 5000 |
-| `-a` | Máximo de Mr. Meeseeks vivos a la vez (semáforo contador) | 128 |
+| `-m` | Máximo de Mr. Meeseeks por solicitud (plan de contingencia) | 3000 |
+| `-a` | Máximo de Mr. Meeseeks trabajando a la vez (semáforo contador) | 128 |
 | `-g` | Ganancia de dilución de la dificultad | 0.5 |
 | `-s` | Semilla del generador aleatorio | tiempo |
 | `-q` | Modo silencioso (solo mensajes de la Box) | |
