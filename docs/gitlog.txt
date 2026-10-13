@@ -1,11 +1,12 @@
-c4545ca 2026-10-12 23:30 Estructura inicial del proyecto: README, Makefile y .gitignore
-bee9ff0 2026-10-12 23:37 Box y Mr. Meeseeks para solicitudes de texto (caso A)
-8edbe5d 2026-10-12 23:38 Caso B: evaluador de expresiones aritmeticas y logicas
-dc953ed 2026-10-12 23:38 Caso C: ejecucion de programas externos con fork/exec/waitpid
-aca0d7d 2026-10-12 23:39 Script de experimentos para la seccion 0x02
-b8473d8 2026-10-12 23:57 Mejoras de salida, corridas de ejemplo y borrador del reporte
-38ec0e5 2026-10-13 00:01 Espera simulada con ppoll() en lugar de poll()
-04da959 2026-10-13 00:03 Cascada de terminacion con PR_SET_PDEATHSIG y E6/E7 extendidos
-413c320 2026-10-13 10:14 Reporte final: resultados de E1 a E6, corridas y conclusiones
-8afc22a 2026-10-13 10:15 Actualiza historial de Git en el reporte
-b352f4b 2026-10-13 10:19 Autoria: Allan David Bolanos Barrientos (2024145458)
+84041a4 2026-10-12 23:30 Estructura inicial del proyecto: README, Makefile y .gitignore
+afbdbc2 2026-10-12 23:37 Box y Mr. Meeseeks para solicitudes de texto (caso A)
+34fb783 2026-10-12 23:38 Caso B: evaluador de expresiones aritmeticas y logicas
+e9c59d5 2026-10-12 23:38 Caso C: ejecucion de programas externos con fork/exec/waitpid
+e2834e5 2026-10-12 23:39 Script de experimentos para la seccion 0x02
+fa0458c 2026-10-12 23:57 Mejoras de salida, corridas de ejemplo y borrador del reporte
+d411e07 2026-10-13 00:01 Espera simulada con ppoll() en lugar de poll()
+75c2ed9 2026-10-13 00:03 Cascada de terminacion con PR_SET_PDEATHSIG y E6/E7 extendidos
+cc8da6a 2026-10-13 10:14 Reporte final: resultados de E1 a E6, corridas y conclusiones
+ba95e2d 2026-10-13 10:15 Actualiza historial de Git en el reporte
+508bc46 2026-10-13 10:19 Autoria: Allan David Bolanos Barrientos (2024145458)
+faf846e 2026-10-13 10:20 Actualiza historial y fragmentos del reporte
