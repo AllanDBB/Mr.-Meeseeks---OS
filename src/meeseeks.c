@@ -896,6 +896,12 @@ static void meeseeks_run(int in_fd, int out_fd, int N, int i)
     s ^= CFG.seeded ? CFG.seed : ((unsigned long long)ts.tv_sec << 30) ^ (unsigned long long)ts.tv_nsec;
     rng_seed(s);
 
+    /* Si mi padre muere de forma abrupta (p. ej. la Box recibe SIGKILL),
+     * el kernel me envia SIGTERM: la muerte se propaga en cascada y no
+     * quedan Meeseeks huerfanos. Si ya murio antes de esta llamada, salgo. */
+    prctl(PR_SET_PDEATHSIG, SIGTERM);
+    if (getppid() != ME.ppid) _exit(1);
+
     say("Hi, I'm Mr. Meeseeks! Look at Meeeee. (%d, %d, %d, %d)", ME.pid, ME.ppid, N, i);
     register_self();
 

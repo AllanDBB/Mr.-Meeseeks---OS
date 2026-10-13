@@ -257,7 +257,7 @@ if e5 is not None:
 # --------------------------------------------------------------------- E6
 e6 = load("e6.csv")
 if e6 is not None:
-    e6["d"] = e6.dificultad
+    e6["d"] = e6.solicitud.str.extract(r"d=([0-9.e+-]+)")[0].astype(float)
     rows = []
     for _, r in e6.sort_values(["d", "id"], ascending=[False, True]).iterrows():
         extra = r.t_total - r.max_time if r.caos_en >= 0 and r.estado == 1 else 0.0
@@ -289,7 +289,7 @@ if e7 is not None:
     for _, r in e7.iterrows():
         est = {1: "completada", 0: "no completada", 2: "caos planetario"}[int(r.estado)]
         extra = r.t_total - r.max_time if r.caos_en >= 0 and r.estado == 1 else float("nan")
-        rows.append([r.solicitud, f"{r.dificultad:g}", est, fmt(r.t_total, 1),
+        rows.append([r.solicitud.replace("E7 ", "").split(" d=")[0], r.solicitud.split("d=")[-1], est, fmt(r.t_total, 1),
                      "--" if np.isnan(extra) else fmt(extra, 1), f"{r.meeseeks:.0f}", f"{r.nivel_max:.0f}",
                      f"{r.pico_vivos:.0f}", fmt(r.cpu, 2)])
     write_tab("e7.tex", ["Solicitud", "$d$", "Estado", "$T_{total}$ (s)", "Extra (s)", "Meeseeks", "Niv.",

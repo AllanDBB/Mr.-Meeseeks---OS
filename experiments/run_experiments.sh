@@ -80,9 +80,11 @@ E5() {
 
 # E6: tareas muy dificiles que superan el tiempo maximo (modo -x, a escala)
 #     Planeta "pequeno": 16 slots, duracion 0.25 s, tiempo maximo 30 s.
+#     Segun la ley de dilucion se necesitan unos log(33/d)/log(2.1) niveles,
+#     por eso se exploran dificultades de hasta 1e-18.
 E6() {
     rm -f $OUT/e6.csv
-    for d in 1 0.1 0.01 0.001 0.0001; do
+    for d in 1 1e-2 1e-4 1e-6 1e-9 1e-12 1e-15 1e-18; do
         { texto_req "E6 d=$d" "$d" 0.25 3; echo adios; } | $BIN -q -x -a 16 -m 30000 -T 30 -o $OUT/e6.csv > /dev/null
         echo "E6 d=$d listo"
     done
@@ -90,12 +92,12 @@ E6() {
 
 # E7: escala real con la configuracion por defecto (T = 300 s, duraciones 0.5-5 s)
 #     (a) d = 0 sin tope que lo detenga: el caos planetario termina todo a los 300 s
-#     (b) d = 0.001 en modo -x con 32 slots: cuanto tiempo adicional necesita
+#     (b) d = 1e-15 en modo -x con 32 slots: cuanto tiempo adicional necesita
 E7() {
     rm -f $OUT/e7.csv
-    { texto_req "E7 imposible" 0 "" 1; echo adios; } | $BIN -q -m 100000 -o $OUT/e7.csv > runs/e7_caos.txt
+    { texto_req "E7 imposible d=0" 0 "" 1; echo adios; } | $BIN -q -m 100000 -o $OUT/e7.csv > runs/e7_caos.txt
     echo "E7a listo"
-    { texto_req "E7 d=0.001" 0.001 "" 1; echo adios; } | $BIN -q -x -a 32 -m 30000 -o $OUT/e7.csv > runs/e7_extra.txt
+    { texto_req "E7 muy dificil d=1e-15" 1e-15 "" 1; echo adios; } | $BIN -q -x -a 32 -m 30000 -o $OUT/e7.csv > runs/e7_extra.txt
     echo "E7b listo"
 }
 
